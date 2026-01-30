@@ -1,26 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-	--background: #ffffff;
-	--foreground: #171717;
+	--background: #0a0a0a;
+	--foreground: #f0f0f0;
+	--neon-green: #00ff88;
+	--neon-purple: #8b5cf6;
+	--neon-blue: #0ea5e9;
+	--card-bg: rgba(20, 20, 20, 0.8);
+	--nav-bg: rgba(10, 10, 10, 0.9);
 }
 
 @theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
-	--font-sans: var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #0a0a0a;
-		--foreground: #ededed;
-	}
+	--color-neon-green: var(--neon-green);
+	--color-neon-purple: var(--neon-purple);
+	--color-neon-blue: var(--neon-blue);
+	--color-card-bg: var(--card-bg);
+	--color-nav-bg: var(--nav-bg);
+	--font-sans: 'Geist', sans-serif;
+	--font-mono: 'Geist Mono', monospace;
 }
 
 body {
 	background: var(--background);
 	color: var(--foreground);
-	font-family: Arial, Helvetica, sans-serif;
+	font-family: 'Geist', sans-serif;
+	overflow-x: hidden;
+}
+
+/* 霓虹效果 */
+.neon-text-green {
+	color: var(--neon-green);
+	text-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+}
+
+.neon-text-purple {
+	color: var(--neon-purple);
+	text-shadow: 0 0 5px var(--neon-purple), 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple);
+}
+
+.neon-border {
+	border: 1px solid var(--neon-green);
+	box-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green);
+}
+
+/* 星空背景 */
+.star-background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+	overflow: hidden;
+}
+
+.star {
+	position: absolute;
+	background: white;
+	border-radius: 50%;
+	animation: twinkle var(--duration, 3s) infinite ease-in-out;
+}
+
+@keyframes twinkle {
+	0%, 100% {
+		opacity: var(--opacity, 0.5);
+		transform: scale(var(--scale, 1));
+	}
+	50% {
+		opacity: 1;
+		transform: scale(calc(var(--scale, 1) * 1.2));
+	}
+}
+
+/* 平滑过渡 */
+.transition-all {
+	transition: all 0.3s ease;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--neon-green);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--neon-purple);
+}
+
+/* 文章内容样式 */
+.prose {
+	max-width: 100%;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+	color: var(--foreground);
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+}
+
+.prose p {
+	margin-bottom: 1rem;
+	line-height: 1.6;
+}
+
+.prose a {
+	color: var(--neon-green);
+	text-decoration: none;
+}
+
+.prose a:hover {
+	text-decoration: underline;
+}
+
+.prose code {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 0.2em 0.4em;
+	border-radius: 4px;
+	font-family: var(--font-mono);
+}
+
+.prose pre {
+	background: rgba(20, 20, 20, 0.8);
+	padding: 1rem;
+	border-radius: 8px;
+	overflow-x: auto;
+}
+
+.prose pre code {
+	background: none;
+	padding: 0;
+}
+
+/* 数学公式样式 */
+.katex {
+	font-size: 1.1em !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+	.prose {
+		padding: 0 1rem;
+	}
 }
