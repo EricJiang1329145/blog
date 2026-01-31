@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getAllPosts } from "../../lib/posts";
 import type { Metadata } from "next";
-import UmamiAnalytics from "../components/UmamiAnalytics";
 
 // 生成页面元数据
 export async function generateMetadata(): Promise<Metadata> {
@@ -72,15 +71,14 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Umami 数据分析功能模块 */}
+          {/* 预留数据分析功能模块空间 */}
           <div className="bg-card-bg p-6 rounded-lg border border-neon-green/20">
             <h3 className="text-lg font-bold mb-4 neon-text-purple">网站数据分析</h3>
             <div className="space-y-4">
-              <UmamiAnalytics 
-                websiteId={process.env.UMAMI_WEBSITE_ID || ''}
-                apiUrl={process.env.UMAMI_API_URL || ''}
-                apiToken={process.env.UMAMI_API_TOKEN || ''}
-              />
+              <div className="text-foreground/70 text-center py-12">
+                <p>数据分析功能模块预留空间</p>
+                <p className="text-sm mt-2">将在后续版本中集成</p>
+              </div>
             </div>
           </div>
         </div>
