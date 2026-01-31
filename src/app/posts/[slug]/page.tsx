@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 	return {
 		title: post.title,
 		description: post.description,
-		keywords: [...post.tags, post.category],
+		keywords: [...post.tags],
 	};
 }
 
@@ -45,10 +45,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
 				<div className="flex flex-wrap justify-center gap-4 text-foreground/70 mb-6">
 					<p>{new Date(post.date).toLocaleDateString()}</p>
 					<p>•</p>
-					<Link href={`/categories/${post.category}`} className="hover:neon-text-green transition-all">
-						{post.category}
-					</Link>
-					<p>•</p>
 					<p>{post.readingTime}</p>
 				</div>
 				<div className="flex flex-wrap justify-center gap-2">
@@ -66,18 +62,12 @@ export default async function PostPage({ params }: { params: { slug: string } })
 			</article>
 
 			{/* 导航链接 */}
-			<div className="flex justify-between">
+			<div className="flex justify-center">
 				<Link href="/" className="inline-flex items-center gap-2 text-neon-green hover:neon-text-green transition-all">
 					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
 						<polyline points="15 18 9 12 15 6"></polyline>
 					</svg>
 					返回首页
-				</Link>
-				<Link href={`/categories/${post.category}`} className="inline-flex items-center gap-2 text-neon-green hover:neon-text-green transition-all">
-					查看更多 {post.category} 文章
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-						<polyline points="9 18 15 12 9 6"></polyline>
-					</svg>
 				</Link>
 			</div>
 		</div>

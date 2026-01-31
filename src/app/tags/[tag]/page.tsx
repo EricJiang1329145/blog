@@ -37,9 +37,6 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
                     {post.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <Link href={`/categories/${post.category}`} className="bg-neon-green/10 text-neon-green px-3 py-1 rounded-full text-sm">
-                      {post.category}
-                    </Link>
                     {post.tags.map((t) => (
                       <Link 
                         key={t} 

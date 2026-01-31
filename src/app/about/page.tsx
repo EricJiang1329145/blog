@@ -1,4 +1,7 @@
+'use client';
+
 import Link from "next/link";
+import EmailLink from "../../components/EmailLink";
 
 export default function About() {
 	return (
@@ -34,36 +37,36 @@ export default function About() {
 					<div className="space-y-2">
 						<h3 className="font-semibold text-foreground">前端技术</h3>
 						<ul className="list-disc list-inside text-foreground/70 space-y-1">
-							<li>Next.js 13+</li>
-							<li>Tailwind CSS 4</li>
-							<li>TypeScript 5+</li>
-							<li>React 19+</li>
+							<li><a href="https://nextjs.org/" className="text-neon-green hover:underline">Next.js 13+</a></li>
+							<li><a href="https://tailwindcss.com/" className="text-neon-green hover:underline">Tailwind CSS 4</a></li>
+							<li><a href="https://www.typescriptlang.org/" className="text-neon-green hover:underline">TypeScript 5+</a></li>
+							<li><a href="https://react.dev/" className="text-neon-green hover:underline">React 19+</a></li>
 						</ul>
 					</div>
 					<div className="space-y-2">
 						<h3 className="font-semibold text-foreground">内容处理</h3>
 						<ul className="list-disc list-inside text-foreground/70 space-y-1">
-							<li>Markdown</li>
-							<li>gray-matter</li>
-							<li>marked</li>
-							<li>highlight.js</li>
-							<li>KaTeX</li>
+							<li><a href="https://daringfireball.net/projects/markdown/" className="text-neon-green hover:underline">Markdown</a></li>
+							<li><a href="https://github.com/jonschlinkert/gray-matter" className="text-neon-green hover:underline">gray-matter</a></li>
+							<li><a href="https://marked.js.org/" className="text-neon-green hover:underline">marked</a></li>
+							<li><a href="https://highlightjs.org/" className="text-neon-green hover:underline">highlight.js</a></li>
+							<li><a href="https://katex.org/" className="text-neon-green hover:underline">KaTeX</a></li>
 						</ul>
 					</div>
 					<div className="space-y-2">
 						<h3 className="font-semibold text-foreground">开发工具</h3>
 						<ul className="list-disc list-inside text-foreground/70 space-y-1">
-							<li>VS Code</li>
-							<li>Git</li>
-							<li>ESLint</li>
-							<li>Jest</li>
+							<li><a href="https://www.trae.cn/" className="text-neon-green hover:underline">Trae</a></li>
+							<li><a href="https://git-scm.com/" className="text-neon-green hover:underline">Git</a></li>
+							<li><a href="https://eslint.org/" className="text-neon-green hover:underline">ESLint</a></li>
+							<li><a href="https://jestjs.io/" className="text-neon-green hover:underline">Jest</a></li>
 						</ul>
 					</div>
 					<div className="space-y-2">
 						<h3 className="font-semibold text-foreground">部署平台</h3>
 						<ul className="list-disc list-inside text-foreground/70 space-y-1">
-							<li>Vercel</li>
-							<li>Cloudflare Workers</li>
+							<li><a href="https://vercel.com/" className="text-neon-green hover:underline">Vercel</a></li>
+							<li><a href="https://workers.cloudflare.com/" className="text-neon-green hover:underline">Cloudflare Workers</a></li>
 						</ul>
 					</div>
 				</div>
@@ -77,13 +80,14 @@ export default function About() {
 				</p>
 				<div className="space-y-2">
 					<p className="text-foreground/90">
-						<span className="font-semibold">Email:</span> contact@neoncosmos.dev
+						<span className="font-semibold">Email:</span> <EmailLink 
+							email="jmr_eric@outlook.com"
+							subject="关于 Neon Cosmos 博客"
+							body="您好，我是通过您的博客了解到您的。我对您分享的内容很感兴趣，想了解更多关于以下方面的信息：\n\n1. 博客内容相关问题\n2. 技术交流\n3. 其他合作机会\n\n期待您的回复！"
+						>jmr_eric@outlook.com</EmailLink>
 					</p>
 					<p className="text-foreground/90">
-						<span className="font-semibold">GitHub:</span> <a href="https://github.com/neoncosmos" className="text-neon-green hover:underline">github.com/neoncosmos</a>
-					</p>
-					<p className="text-foreground/90">
-						<span className="font-semibold">Twitter:</span> <a href="https://twitter.com/neoncosmos" className="text-neon-green hover:underline">@neoncosmos</a>
+						<span className="font-semibold">GitHub:</span> <a href="https://github.com/ericjiang1329145" className="text-neon-green hover:underline">github.com/ericjiang1329145</a>
 					</p>
 				</div>
 			</section>

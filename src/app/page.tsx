@@ -45,9 +45,6 @@ export default async function Home() {
                     {post.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <Link href={`/categories/${post.category}`} className="bg-neon-green/10 text-neon-green px-3 py-1 rounded-full text-sm">
-                      {post.category}
-                    </Link>
                     {post.tags.map((tag) => (
                       <Link key={tag} href={`/tags/${tag}`} className="bg-neon-purple/10 text-neon-purple px-3 py-1 rounded-full text-sm">
                         {tag}

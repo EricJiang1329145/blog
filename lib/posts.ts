@@ -58,7 +58,6 @@ marked.use(markedKatex({
 export interface PostMetadata {
   title: string;
   date: string;
-  category: string;
   tags: string[];
   description: string;
 }
@@ -69,7 +68,6 @@ export interface Post {
   slug: string;
   title: string;
   date: string;
-  category: string;
   tags: string[];
   description: string;
   content: string;
@@ -77,7 +75,7 @@ export interface Post {
 }
 
 // 导入预生成的文章数据
-import { posts as postsData, categories as categoriesData, tags as tagsData } from './data/posts';
+import { posts as postsData, tags as tagsData } from './data/posts';
 
 // 获取所有文章
 export async function getAllPosts(): Promise<Post[]> {
@@ -89,20 +87,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   return postsData.find(post => post.slug === slug) || null;
 }
 
-// 获取所有分类
-export async function getAllCategories(): Promise<string[]> {
-  return categoriesData;
-}
-
 // 获取所有标签
 export async function getAllTags(): Promise<string[]> {
   return tagsData;
-}
-
-// 按分类获取文章
-export async function getPostsByCategory(category: string): Promise<Post[]> {
-  const posts = await getAllPosts();
-  return posts.filter(post => post.category === category);
 }
 
 // 按标签获取文章

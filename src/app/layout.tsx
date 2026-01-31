@@ -35,12 +35,6 @@ export default function RootLayout({
 							<Link href="/about" className="text-foreground hover:neon-text-green transition-all">
 								关于
 							</Link>
-							<Link href="/categories" className="text-foreground hover:neon-text-green transition-all">
-								分类
-							</Link>
-							<Link href="/tags" className="text-foreground hover:neon-text-green transition-all">
-								标签
-							</Link>
 						</nav>
 						
 						{/* 移动端导航按钮 */}

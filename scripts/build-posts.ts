@@ -53,7 +53,6 @@ marked.use(markedKatex({
 interface PostMetadata {
   title: string;
   date: string;
-  category: string;
   tags: string[];
   description: string;
 }
@@ -64,7 +63,6 @@ interface Post {
   slug: string;
   title: string;
   date: string;
-  category: string;
   tags: string[];
   description: string;
   content: string;
@@ -80,7 +78,6 @@ async function generatePostsData() {
     console.log('Posts directory not found, creating empty data file');
     const emptyData = {
       posts: [],
-      categories: [],
       tags: []
     };
     
@@ -94,8 +91,6 @@ async function generatePostsData() {
     fs.writeFileSync(
       path.join(outputDirectory, 'posts.ts'),
       `export const posts = ${JSON.stringify(emptyData.posts, null, 2)};
-
-export const categories = ${JSON.stringify(emptyData.categories, null, 2)};
 
 export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
 `
@@ -129,7 +124,6 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
         slug,
         title: metadata.title,
         date: metadata.date,
-        category: metadata.category,
         tags: metadata.tags,
         description: metadata.description,
         content: marked.parse(processedContent) as string,
@@ -140,9 +134,6 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
   
   // 按日期降序排序
   const sortedPosts = allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  
-  // 提取分类
-  const categories = Array.from(new Set(sortedPosts.map(post => post.category))).sort();
   
   // 提取标签
   const tagsSet = new Set<string>();
@@ -159,8 +150,6 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
   fs.writeFileSync(
     path.join(outputDirectory, 'posts.ts'),
     `export const posts = ${JSON.stringify(sortedPosts, null, 2)};
-
-export const categories = ${JSON.stringify(categories, null, 2)};
 
 export const tags = ${JSON.stringify(tags, null, 2)};
 `
