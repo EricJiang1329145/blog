@@ -55,11 +55,7 @@ marked.use({
 
 // 添加 KaTeX 扩展
 marked.use(markedKatex({
-  throwOnError: false,
-  delimiters: [
-    { left: "$", right: "$", display: false },
-    { left: "$$", right: "$$", display: true }
-  ]
+  throwOnError: false
 }));
 
 // 文章元数据接口
