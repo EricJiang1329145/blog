@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPostsByCategory } from "../../../../lib/posts";
+import { getPostsByCategory, getAllCategories } from "../../../../lib/posts";
 
 export default async function CategoryPage({ params }: { params: { category: string } }) {
   const { category } = params;
@@ -72,7 +72,6 @@ export default async function CategoryPage({ params }: { params: { category: str
 
 // 生成静态参数
 export async function generateStaticParams() {
-  const { getAllCategories } = await import("../../../../lib/posts");
   const categories = await getAllCategories();
   return categories.map((category) => ({ category }));
 }

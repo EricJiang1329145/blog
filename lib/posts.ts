@@ -1,13 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import { marked } from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github-dark.css';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import markedKatex from 'marked-katex-extension';
-import readingTime from 'reading-time';
 
 // 配置 marked 库
 const renderer = new marked.Renderer();
@@ -80,103 +76,27 @@ export interface Post {
   readingTime: string;
 }
 
+// 导入预生成的文章数据
+import { posts as postsData, categories as categoriesData, tags as tagsData } from './data/posts';
+
 // 获取所有文章
 export async function getAllPosts(): Promise<Post[]> {
-  const postsDirectory = path.join(process.cwd(), 'content', 'posts');
-  
-  // 检查目录是否存在
-  if (!fs.existsSync(postsDirectory)) {
-    return [];
-  }
-  
-  const fileNames = fs.readdirSync(postsDirectory);
-  const allPosts = await Promise.all(
-    fileNames.map(async (fileName) => {
-      const slug = fileName.replace(/\.md$/, '');
-      const fullPath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data, content } = matter(fileContents);
-      
-      const metadata = data as PostMetadata;
-      const readingTimeResult = readingTime(content);
-      
-      // 预处理分割线，添加不同的类名
-      let processedContent = content;
-      // 替换 --- 为 <hr class="hr-thick">
-      processedContent = processedContent.replace(/^-{3,}$/gm, '<hr class="hr-thick">');
-      // 替换 *** 为 <hr class="hr-medium">
-      processedContent = processedContent.replace(/^\*{3,}$/gm, '<hr class="hr-medium">');
-      // 替换 ___ 为 <hr class="hr-thin">
-      processedContent = processedContent.replace(/^_{3,}$/gm, '<hr class="hr-thin">');
-
-      return {
-        id: slug,
-        slug,
-        title: metadata.title,
-        date: metadata.date,
-        category: metadata.category,
-        tags: metadata.tags,
-        description: metadata.description,
-        content: marked.parse(processedContent) as string,
-        readingTime: `${readingTimeResult.text}`,
-      };
-    })
-  );
-  
-  // 按日期降序排序
-  return allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return postsData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 // 根据 slug 获取单篇文章
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const postsDirectory = path.join(process.cwd(), 'content', 'posts');
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
-  
-  if (!fs.existsSync(fullPath)) {
-    return null;
-  }
-  
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
-  
-  const metadata = data as PostMetadata;
-  const readingTimeResult = readingTime(content);
-  
-  // 预处理分割线，添加不同的类名
-  let processedContent = content;
-  // 替换 --- 为 <hr class="hr-thick">
-  processedContent = processedContent.replace(/^-{3,}$/gm, '<hr class="hr-thick">');
-  // 替换 *** 为 <hr class="hr-medium">
-  processedContent = processedContent.replace(/^\*{3,}$/gm, '<hr class="hr-medium">');
-  // 替换 ___ 为 <hr class="hr-thin">
-  processedContent = processedContent.replace(/^_{3,}$/gm, '<hr class="hr-thin">');
-
-  return {
-    id: slug,
-    slug,
-    title: metadata.title,
-    date: metadata.date,
-    category: metadata.category,
-    tags: metadata.tags,
-    description: metadata.description,
-    content: marked.parse(processedContent) as string,
-    readingTime: `${readingTimeResult.text}`,
-  };
+  return postsData.find(post => post.slug === slug) || null;
 }
 
 // 获取所有分类
 export async function getAllCategories(): Promise<string[]> {
-  const posts = await getAllPosts();
-  const categories = new Set(posts.map(post => post.category));
-  return Array.from(categories).sort();
+  return categoriesData;
 }
 
 // 获取所有标签
 export async function getAllTags(): Promise<string[]> {
-  const posts = await getAllPosts();
-  const tags = new Set<string>();
-  posts.forEach(post => post.tags.forEach(tag => tags.add(tag)));
-  return Array.from(tags).sort();
+  return tagsData;
 }
 
 // 按分类获取文章

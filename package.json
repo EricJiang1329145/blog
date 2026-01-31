@@ -35,19 +35,20 @@
 		"eslint": "9.39.2",
 		"eslint-config-next": "^16.1.6",
 		"tailwindcss": "4.1.17",
+		"ts-node": "^10.9.2",
 		"typescript": "5.9.3",
 		"wrangler": "4.56.0"
 	},
 	"private": true,
 	"scripts": {
-		"build": "next build",
-		"build:cloudflare": "opennextjs-cloudflare build",
+		"build": "node scripts/build-posts.mjs && next build",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
 		"check": "npm run build && tsc",
-		"deploy": "opennextjs-cloudflare deploy",
-		"dev": "next dev",
+		"deploy": "node scripts/build-posts.mjs && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+		"dev": "node scripts/build-posts.mjs && next dev",
 		"lint": "next lint",
-		"preview": "opennextjs-cloudflare preview",
-		"start": "next start"
+		"preview": "node scripts/build-posts.mjs && opennextjs-cloudflare build && opennextjs-cloudflare preview",
+		"start": "next start",
+		"generate-posts": "node scripts/build-posts.mjs"
 	}
 }

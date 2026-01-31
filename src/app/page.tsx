@@ -1,5 +1,14 @@
 import Link from "next/link";
 import { getAllPosts } from "../../lib/posts";
+import type { Metadata } from "next";
+
+// 生成页面元数据
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Neon Cosmos - 探索黑客、数学与太空的奇妙世界",
+    description: "一个关于黑客技术、数学和太空探索的博客",
+  };
+}
 
 export default async function Home() {
   const posts = await getAllPosts();
