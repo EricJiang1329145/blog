@@ -68,7 +68,7 @@ marked.use({
             label: match[1]
           };
         }
-        return null;
+        return undefined;
       },
       renderer(token) {
         return `
