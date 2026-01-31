@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import StarBackground from "../components/StarBackground";
 import BackToTopButton from "../components/BackToTopButton";
+import Navigation from "../components/Navigation";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,32 +22,8 @@ export default function RootLayout({
 				<StarBackground />
 				
 				{/* 导航栏 */}
-				<header className="fixed top-0 left-0 right-0 z-50 bg-nav-bg/90 backdrop-blur-md border-b border-neon-green/20">
-					<div className="container mx-auto px-4 py-4 flex justify-between items-center">
-						<Link href="/" className="text-2xl font-bold neon-text-green">
-							Neon Cosmos
-						</Link>
-						
-						{/* 桌面导航 */}
-						<nav className="hidden md:flex space-x-8">
-							<Link href="/" className="text-foreground hover:neon-text-green transition-all">
-								首页
-							</Link>
-							<Link href="/about" className="text-foreground hover:neon-text-green transition-all">
-								关于
-							</Link>
-						</nav>
-						
-						{/* 移动端导航按钮 */}
-						<button className="md:hidden text-foreground">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-								<line x1="3" y1="12" x2="21" y2="12"></line>
-								<line x1="3" y1="6" x2="21" y2="6"></line>
-								<line x1="3" y1="18" x2="21" y2="18"></line>
-							</svg>
-						</button>
-					</div>
-				</header>
+				<Navigation />
+				
 				
 				{/* 主要内容 */}
 				<main className="container mx-auto px-4 pt-24 pb-16">
