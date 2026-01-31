@@ -1,10 +1,5 @@
 # Neon Cosmos 博客
 
-## 语言选择 / Language
-
-- [中文 (默认)](README.md)
-- [English](README.en.md)
-
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/next-starter-template)
 
 <!-- dash-content-start -->

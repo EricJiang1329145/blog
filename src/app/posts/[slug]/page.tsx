@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPostBySlug } from "../../../../lib/posts";
 import type { Metadata } from "next";
+import ReadingProgressBar from "../../../components/ReadingProgressBar";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata | undefined> {
 	const resolvedParams = await params;
@@ -22,6 +23,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 	if (!post) {
 		return (
 			<div className="max-w-4xl mx-auto text-center py-16">
+				<ReadingProgressBar />
 				<h1 className="text-4xl font-bold mb-4 neon-text-green">文章不存在</h1>
 				<p className="text-foreground/70 text-lg mb-8">该文章可能已被删除或移动</p>
 				<Link href="/" className="inline-flex items-center gap-2 text-neon-green hover:neon-text-green transition-all">
@@ -36,6 +38,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 
 	return (
 		<div className="max-w-3xl mx-auto">
+			<ReadingProgressBar />
 			{/* 文章标题和元信息 */}
 			<div className="mb-12 text-center">
 				<h1 className="text-3xl md:text-4xl font-bold mb-6">{post.title}</h1>

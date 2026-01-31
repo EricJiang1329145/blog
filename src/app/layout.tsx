@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import StarBackground from "../components/StarBackground";
+import BackToTopButton from "../components/BackToTopButton";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -66,6 +67,8 @@ export default function RootLayout({
 						</p>
 					</div>
 				</footer>
+
+				<BackToTopButton />
 
 				{/* 复制按钮脚本 - 只在客户端执行 */}
 				<script dangerouslySetInnerHTML={{

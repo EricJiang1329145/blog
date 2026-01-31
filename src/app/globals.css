@@ -2,13 +2,13 @@
 @import "tailwindcss";
 
 :root {
-	--background: #0a0a0a;
+	--background: #0d1117;
 	--foreground: #f0f0f0;
 	--neon-green: #00ff88;
 	--neon-purple: #8b5cf6;
 	--neon-blue: #0ea5e9;
-	--card-bg: rgba(20, 20, 20, 0.8);
-	--nav-bg: rgba(10, 10, 10, 0.9);
+	--card-bg: rgba(30, 30, 40, 0.8);
+	--nav-bg: rgba(13, 17, 23, 0.9);
 }
 
 @theme inline {
