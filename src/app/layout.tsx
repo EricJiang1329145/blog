@@ -7,8 +7,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
 	title: "Neon Cosmos",
-	description: "探索黑客、数学与太空的奇妙世界",
-	keywords: ["博客", "技术", "黑客", "数学", "太空", "Next.js", "TypeScript"],
+	description: "探索技术、数学与太空的奇妙世界",
+	keywords: ["博客", "技术", "数学", "太空", "Next.js", "TypeScript"],
 };
 
 export default function RootLayout({
@@ -37,7 +37,7 @@ export default function RootLayout({
 				<footer className="bg-nav-bg/90 backdrop-blur-md border-t border-neon-green/20 py-8">
 					<div className="container mx-auto px-4 text-center">
 						<p className="text-foreground/70">
-							© {new Date().getFullYear()} Neon Cosmos. 探索黑客、数学与太空的奇妙世界.
+							© {new Date().getFullYear()} Neon Cosmos. 探索技术、数学与太空的奇妙世界.
 						</p>
 					</div>
 				</footer>

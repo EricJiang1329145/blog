@@ -13,7 +13,7 @@ export default function About() {
 					<span className="mx-2">|</span>
 					<span className="neon-text-purple">Neon Cosmos</span>
 				</h1>
-				<p className="text-foreground/70 text-lg">探索黑客、数学与太空的奇妙世界</p>
+				<p className="text-foreground/70 text-lg">探索技术、数学与太空的奇妙世界</p>
 			</div>
 
 			{/* 个人简介 */}
@@ -23,7 +23,7 @@ export default function About() {
 					欢迎来到 Neon Cosmos 博客！我是一名热爱技术、数学和太空的开发者，致力于探索科技与宇宙的奥秘。
 				</p>
 				<p className="text-foreground/90 mb-4 leading-relaxed">
-					这个博客是我分享知识和思考的地方，内容涵盖黑客技术、数学理论、太空探索等多个领域。我希望通过深入浅出的文章，让更多人了解这些奇妙的主题。
+					这个博客是我分享知识和思考的地方，内容涵盖技术、数学理论、太空探索等多个领域。我希望通过深入浅出的文章，让更多人了解这些奇妙的主题。
 				</p>
 				<p className="text-foreground/90 leading-relaxed">
 					如果你对这些主题也感兴趣，欢迎关注我的博客，一起探索科技与宇宙的无限可能！

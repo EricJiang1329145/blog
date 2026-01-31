@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { getAllPosts } from "../../lib/posts";
 import type { Metadata } from "next";
+import UmamiAnalytics from "../components/UmamiAnalytics";
 
 // 生成页面元数据
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Neon Cosmos - 探索黑客、数学与太空的奇妙世界",
-    description: "一个关于黑客技术、数学和太空探索的博客",
+    title: "Neon Cosmos - 探索技术、数学与太空的奇妙世界",
+    description: "一个关于技术、数学和太空探索的博客",
   };
 }
 
@@ -17,13 +18,13 @@ export default async function Home() {
     <div className="max-w-7xl mx-auto">
       {/* 标题部分 */}
       <div className="mb-16 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          <span className="neon-text-green">Neon</span>
-          <span className="mx-2">|</span>
-          <span className="neon-text-purple">Cosmos</span>
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-pulse">
+          <span className="neon-text-green neon-glow-green">Neon</span>
+          <span className="mx-2 text-foreground/50">|</span>
+          <span className="neon-text-purple neon-glow-purple">Cosmos</span>
         </h1>
-        <p className="text-foreground/70 text-lg md:text-xl">
-          探索黑客、数学与太空的奇妙世界
+        <p className="text-foreground/70 text-lg md:text-xl neon-text-subtitle">
+          探索技术、数学与太空的奇妙世界
         </p>
       </div>
 
@@ -37,7 +38,7 @@ export default async function Home() {
               {/* 作者头像 */}
               <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-neon-green/50">
                 <img 
-                  src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20tech%20blogger%20portrait%2C%20neon%20lighting%2C%20hacker%20aesthetic%2C%20digital%20art%2C%20high%20quality&image_size=square_hd" 
+                  src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20tech%20blogger%20portrait%2C%20neon%20lighting%2C%20tech%20aesthetic%2C%20digital%20art%2C%20high%20quality&image_size=square_hd" 
                   alt="作者头像" 
                   className="w-full h-full object-cover"
                 />
@@ -46,7 +47,7 @@ export default async function Home() {
               <h3 className="text-xl font-bold mb-2 neon-text-green">Eric Jiang</h3>
               {/* 作者简介 */}
               <p className="text-foreground/70 mb-4">
-                热爱黑客技术、数学和太空探索的技术爱好者，致力于分享有趣的知识和见解。
+                热爱技术、数学和太空探索的技术爱好者，致力于分享有趣的知识和见解。
               </p>
               {/* 联系方式 */}
               <div className="flex justify-center space-x-4">
@@ -71,14 +72,15 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* 预留数据分析功能模块空间 */}
+          {/* Umami 数据分析功能模块 */}
           <div className="bg-card-bg p-6 rounded-lg border border-neon-green/20">
             <h3 className="text-lg font-bold mb-4 neon-text-purple">网站数据分析</h3>
             <div className="space-y-4">
-              <div className="text-foreground/70 text-center py-12">
-                <p>数据分析功能模块预留空间</p>
-                <p className="text-sm mt-2">将在后续版本中集成</p>
-              </div>
+              <UmamiAnalytics 
+                websiteId={process.env.UMAMI_WEBSITE_ID || ''}
+                apiUrl={process.env.UMAMI_API_URL || ''}
+                apiToken={process.env.UMAMI_API_TOKEN || ''}
+              />
             </div>
           </div>
         </div>
