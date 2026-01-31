@@ -20,7 +20,7 @@ export default function RootLayout({
 		<html lang="zh-CN">
 			<head>
 				<script defer src="https://cloud.umami.is/script.js" data-website-id="b572d3db-28bf-4534-b2ed-6ccbfe769302"></script>
-				<!-- 不蒜子统计代码 -->
+				{/* 不蒜子统计代码 */}
 				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 			</head>
 			<body className="min-h-screen">
