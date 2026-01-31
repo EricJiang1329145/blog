@@ -16,13 +16,36 @@ const renderer = new marked.Renderer();
 renderer.code = ({ text, lang }) => {
   const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
   const highlightedCode = hljs.highlight(text, { language: validLanguage }).value;
-  return `<pre class="bg-gray-900 p-4 rounded-lg overflow-x-auto"><code class="language-${validLanguage}">${highlightedCode}</code></pre>`;
+  
+  // 生成带行号的代码
+  const lines = highlightedCode.split('\n');
+  const lineNumbers = lines.map((_, index) => `<span class="line-number">${index + 1}</span>`).join('\n');
+  const codeWithLines = lines.map((line, index) => `<div class="code-line"><span class="line-content">${line}</span></div>`).join('\n');
+  
+  return `
+    <div class="code-block-container">
+      <div class="code-block-header">
+        <span class="code-language">${validLanguage}</span>
+        <button class="copy-button" data-code="${encodeURIComponent(text)}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+          </svg>
+          复制
+        </button>
+      </div>
+      <div class="code-content-wrapper">
+        <div class="line-numbers">${lineNumbers}</div>
+        <div class="code-content">${codeWithLines}</div>
+      </div>
+    </div>
+  `;
 };
 
 // 配置 KaTeX 插件
 const katexOptions = {
   throwOnError: false,
-  displayMode: true,
+  displayMode: false,
 };
 
 // 初始化 marked
@@ -32,7 +55,12 @@ marked.use({
 
 // 添加 KaTeX 扩展
 marked.use(markedKatex({
-  katexOptions
+  throwOnError: false,
+  katexOptions,
+  delimiters: [
+    { left: "$", right: "$", display: false },
+    { left: "$$", right: "$$", display: true }
+  ]
 }));
 
 // 文章元数据接口
@@ -77,6 +105,15 @@ export async function getAllPosts(): Promise<Post[]> {
       const metadata = data as PostMetadata;
       const readingTimeResult = readingTime(content);
       
+      // 预处理分割线，添加不同的类名
+      let processedContent = content;
+      // 替换 --- 为 <hr class="hr-thick">
+      processedContent = processedContent.replace(/^-{3,}$/gm, '<hr class="hr-thick">');
+      // 替换 *** 为 <hr class="hr-medium">
+      processedContent = processedContent.replace(/^\*{3,}$/gm, '<hr class="hr-medium">');
+      // 替换 ___ 为 <hr class="hr-thin">
+      processedContent = processedContent.replace(/^_{3,}$/gm, '<hr class="hr-thin">');
+
       return {
         id: slug,
         slug,
@@ -85,7 +122,7 @@ export async function getAllPosts(): Promise<Post[]> {
         category: metadata.category,
         tags: metadata.tags,
         description: metadata.description,
-        content: marked.parse(content) as string,
+        content: marked.parse(processedContent) as string,
         readingTime: `${readingTimeResult.text}`,
       };
     })
@@ -110,6 +147,15 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   const metadata = data as PostMetadata;
   const readingTimeResult = readingTime(content);
   
+  // 预处理分割线，添加不同的类名
+  let processedContent = content;
+  // 替换 --- 为 <hr class="hr-thick">
+  processedContent = processedContent.replace(/^-{3,}$/gm, '<hr class="hr-thick">');
+  // 替换 *** 为 <hr class="hr-medium">
+  processedContent = processedContent.replace(/^\*{3,}$/gm, '<hr class="hr-medium">');
+  // 替换 ___ 为 <hr class="hr-thin">
+  processedContent = processedContent.replace(/^_{3,}$/gm, '<hr class="hr-thin">');
+
   return {
     id: slug,
     slug,
@@ -118,7 +164,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     category: metadata.category,
     tags: metadata.tags,
     description: metadata.description,
-    content: marked.parse(content) as string,
+    content: marked.parse(processedContent) as string,
     readingTime: `${readingTimeResult.text}`,
   };
 }

@@ -98,15 +98,107 @@ body {
 	background: var(--neon-purple);
 }
 
+/* 分割线样式 */
+/* 粗分割线 --- */
+.prose hr.hr-thick {
+	border: none;
+	border-top: 3px solid var(--neon-purple);
+	box-shadow: 0 0 10px var(--neon-purple);
+	margin: 2rem 0;
+}
+
+/* 中等分割线 *** */
+.prose hr.hr-medium {
+	border: none;
+	border-top: 2px solid var(--neon-purple);
+	box-shadow: 0 0 8px var(--neon-purple);
+	margin: 2rem 0;
+}
+
+/* 细分割线 ___ */
+.prose hr.hr-thin {
+	border: none;
+	border-top: 1px solid var(--neon-purple);
+	box-shadow: 0 0 6px var(--neon-purple);
+	margin: 2rem 0;
+}
+
 /* 文章内容样式 */
 .prose {
 	max-width: 100%;
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-	color: var(--foreground);
+	color: var(--neon-green);
+	text-shadow: 0 0 5px var(--neon-green);
 	margin-top: 2rem;
 	margin-bottom: 1rem;
+}
+
+.prose h1 {
+	font-size: 2.5rem;
+	font-weight: 700;
+	position: relative;
+	padding-bottom: 0.5rem;
+}
+
+.prose h1::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	border-top: 3px solid var(--neon-purple);
+	box-shadow: 0 0 10px var(--neon-purple);
+}
+
+.prose h2 {
+	font-size: 2rem;
+	font-weight: 600;
+	position: relative;
+	padding-bottom: 0.5rem;
+}
+
+.prose h2::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	border-top: 2px solid var(--neon-purple);
+	box-shadow: 0 0 8px var(--neon-purple);
+}
+
+.prose h3 {
+	font-size: 1.75rem;
+	font-weight: 600;
+	position: relative;
+	padding-bottom: 0.5rem;
+}
+
+.prose h3::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	border-top: 1px solid var(--neon-purple);
+	box-shadow: 0 0 6px var(--neon-purple);
+}
+
+.prose h4 {
+	font-size: 1.5rem;
+	font-weight: 500;
+}
+
+.prose h5 {
+	font-size: 1.25rem;
+	font-weight: 500;
+}
+
+.prose h6 {
+	font-size: 1rem;
+	font-weight: 500;
 }
 
 .prose p {
@@ -140,6 +232,210 @@ body {
 .prose pre code {
 	background: none;
 	padding: 0;
+}
+
+/* 代码块样式 */
+.code-block-container {
+	background: rgba(20, 20, 20, 0.7);
+	border-radius: 8px;
+	overflow: hidden;
+	margin-bottom: 1.5rem;
+	box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+	border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.code-block-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem 1rem;
+	background: rgba(139, 92, 246, 0.2);
+	border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.code-language {
+	color: var(--neon-purple);
+	text-shadow: 0 0 5px var(--neon-purple);
+	font-size: 0.875rem;
+	font-weight: 500;
+}
+
+.copy-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: rgba(0, 255, 136, 0.1);
+	color: var(--neon-green);
+	border: 1px solid rgba(0, 255, 136, 0.3);
+	border-radius: 4px;
+	padding: 0.25rem 0.5rem;
+	font-size: 0.75rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+	background: rgba(0, 255, 136, 0.2);
+	box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+.copy-button.copied {
+	background: rgba(0, 255, 136, 0.3);
+	color: var(--neon-green);
+	box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+.code-content-wrapper {
+	display: flex;
+	overflow-x: auto;
+}
+
+.line-numbers {
+	background: rgba(10, 10, 10, 0.5);
+	padding: 1rem 0.5rem;
+	text-align: right;
+	user-select: none;
+	counter-reset: line;
+}
+
+.line-number {
+	display: block;
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 0.875rem;
+	font-family: var(--font-mono);
+	line-height: 1.5;
+}
+
+.code-content {
+	flex: 1;
+	padding: 1rem;
+	font-family: var(--font-mono);
+	font-size: 0.875rem;
+	line-height: 1.5;
+}
+
+.code-line {
+	display: block;
+}
+
+.line-content {
+	display: block;
+	white-space: pre-wrap;
+}
+
+/* 确保行号不被选中 */
+.line-numbers {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* 列表样式 */
+.prose ul,
+.prose ol {
+	margin-bottom: 1rem;
+	padding-left: 1.5rem;
+}
+
+.prose li {
+	margin-bottom: 0.5rem;
+	line-height: 1.6;
+}
+
+/* 无序列表样式 */
+.prose ul li {
+	position: relative;
+}
+
+.prose ul li::before {
+	content: '•';
+	color: var(--neon-green);
+	text-shadow: 0 0 5px var(--neon-green);
+	font-weight: bold;
+	position: absolute;
+	left: -1.2rem;
+}
+
+/* 有序列表样式 */
+.prose ol {
+	counter-reset: list-counter;
+}
+
+.prose ol li {
+	counter-increment: list-counter;
+	position: relative;
+}
+
+.prose ol li::before {
+	content: counter(list-counter) '.';
+	color: var(--neon-purple);
+	text-shadow: 0 0 5px var(--neon-purple);
+	font-weight: bold;
+	position: absolute;
+	left: -1.5rem;
+}
+
+/* 任务列表样式 */
+.prose ul.contains-task-list {
+	list-style: none;
+	padding-left: 1.5rem;
+}
+
+.prose .task-list-item {
+	position: relative;
+}
+
+.prose .task-list-item input[type="checkbox"] {
+	margin-right: 0.5rem;
+	accent-color: var(--neon-green);
+}
+
+/* 嵌套列表样式 */
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+/* 表格样式 */
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 1.5rem;
+	background: rgba(20, 20, 20, 0.6);
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.prose thead {
+	background: rgba(139, 92, 246, 0.2);
+	border-bottom: 2px solid var(--neon-purple);
+}
+
+.prose th {
+	padding: 0.75rem 1rem;
+	text-align: left;
+	color: var(--neon-purple);
+	text-shadow: 0 0 5px var(--neon-purple);
+	font-weight: 600;
+}
+
+.prose td {
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.prose tr:last-child td {
+	border-bottom: none;
+}
+
+.prose tr:hover {
+	background: rgba(139, 92, 246, 0.1);
+	transition: background 0.3s ease;
 }
 
 /* 数学公式样式 */
