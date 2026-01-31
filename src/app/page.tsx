@@ -71,13 +71,28 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* 预留数据分析功能模块空间 */}
+          {/* 网站数据分析模块 */}
           <div className="bg-card-bg p-6 rounded-lg border border-neon-green/20">
             <h3 className="text-lg font-bold mb-4 neon-text-purple">网站数据分析</h3>
             <div className="space-y-4">
-              <div className="text-foreground/70 text-center py-12">
-                <p>数据分析功能模块预留空间</p>
-                <p className="text-sm mt-2">将在后续版本中集成</p>
+              <div className="text-foreground/70 space-y-4">
+                <div className="flex justify-between items-center p-3 bg-card-bg/50 rounded-lg border border-neon-green/10">
+                  <span className="font-medium">站点总访问量</span>
+                  <span className="neon-text-green font-bold">
+                    <span id="busuanzi_value_site_pv"></span>
+                    <span className="text-sm ml-1">次</span>
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-card-bg/50 rounded-lg border border-neon-green/10">
+                  <span className="font-medium">站点访客数</span>
+                  <span className="neon-text-purple font-bold">
+                    <span id="busuanzi_value_site_uv"></span>
+                    <span className="text-sm ml-1">人次</span>
+                  </span>
+                </div>
+                <div className="text-xs text-center text-foreground/50 mt-4">
+                  数据统计由 <a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener noreferrer" className="hover:neon-text-green transition-all">不蒜子</a> 提供
+                </div>
               </div>
             </div>
           </div>

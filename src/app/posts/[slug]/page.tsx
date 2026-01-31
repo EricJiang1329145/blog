@@ -47,6 +47,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
 					<p>{new Date(post.date).toLocaleDateString()}</p>
 					<p>•</p>
 					<p>{post.readingTime}</p>
+					<p>•</p>
+					<p className="neon-text-green">
+						<span id="busuanzi_value_page_pv"></span>
+						<span className="ml-1">次阅读</span>
+					</p>
 				</div>
 				<div className="flex flex-wrap justify-center gap-2">
 					{post.tags.map((tag) => (

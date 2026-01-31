@@ -2,7 +2,7 @@
 # 参考文档：https://developers.cloudflare.com/pages/platform/build-configuration/
 
 # 构建命令 - 使用项目自定义的构建脚本
-build_command: pnpm run build && pnpm opennextjs-cloudflare build
+build_command: pnpm run build && pnpm run build:opennext
 
 # 构建输出目录
 # OpenNext 会将构建输出放在 .open-next 目录中
