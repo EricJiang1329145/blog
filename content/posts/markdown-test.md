@@ -184,7 +184,7 @@ $$
 
 ### 12.1 内联 HTML
 
-<div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">
+<div style="background-color: #512424ff; padding: 10px; border-radius: 5px;">
   这是一段内联 HTML 内容
 </div>
 

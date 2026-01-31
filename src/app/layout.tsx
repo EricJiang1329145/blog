@@ -101,6 +101,32 @@ export default function RootLayout({
 											});
 									});
 								});
+
+								// 脚注功能
+								const footnoteButtons = document.querySelectorAll('.footnote-button');
+								footnoteButtons.forEach(button => {
+									button.addEventListener('click', function(e) {
+										e.preventDefault();
+										const footnoteId = this.getAttribute('data-footnote-id');
+										if (!footnoteId) return;
+
+										const tooltip = document.getElementById('footnote-tooltip-' + footnoteId);
+										const footnoteDefinition = document.getElementById('footnote-' + footnoteId);
+										if (!tooltip || !footnoteDefinition) return;
+
+										// 显示脚注内容
+										tooltip.innerHTML = footnoteDefinition.innerHTML;
+										tooltip.style.display = tooltip.style.display === 'block' ? 'none' : 'block';
+
+										// 点击其他地方关闭脚注
+										document.addEventListener('click', function closeFootnote(event) {
+											if (!button.contains(event.target) && !tooltip.contains(event.target)) {
+												tooltip.style.display = 'none';
+												document.removeEventListener('click', closeFootnote);
+											}
+										});
+									});
+								});
 							});
 						}
 					`

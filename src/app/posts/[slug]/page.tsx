@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getPostBySlug } from "../../../../lib/posts";
 import type { Metadata } from "next";
 import ReadingProgressBar from "../../../components/ReadingProgressBar";
+import ShareButton from "../../../components/ShareButton";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata | undefined> {
 	const resolvedParams = await params;
@@ -60,6 +61,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
 			<article className="bg-card-bg p-6 md:p-8 rounded-lg border border-neon-green/20 mb-12">
 				<div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
 			</article>
+
+			{/* 分享按钮 */}
+			<ShareButton slug={slug} title={post.title} />
 
 			{/* 导航链接 */}
 			<div className="flex justify-center">

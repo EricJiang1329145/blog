@@ -49,6 +49,76 @@ marked.use(markedKatex({
   throwOnError: false
 }));
 
+// 添加脚注扩展
+marked.use({
+  extensions: [
+    {
+      name: 'footnoteRef',
+      level: 'inline',
+      start(src) {
+        return src.indexOf('[^');
+      },
+      tokenizer(src, tokens) {
+        const match = src.match(/^\[\^(\d+)\]/);
+        if (match) {
+          return {
+            type: 'footnoteRef',
+            raw: match[0],
+            id: `fn${match[1]}`,
+            label: match[1]
+          };
+        }
+        return null;
+      },
+      renderer(token) {
+        return `
+          <span class="footnote-ref">
+            <button 
+              class="footnote-button" 
+              data-footnote-id="${token.id}"
+              aria-label="脚注 ${token.label}"
+            >
+              [${token.label}]
+            </button>
+            <span class="footnote-tooltip" id="footnote-tooltip-${token.id}"></span>
+          </span>
+        `;
+      }
+    }
+  ]
+});
+
+// 处理脚注定义的后处理函数
+function processFootnotes(content: string): string {
+  // 提取所有脚注定义
+  const footnoteDefinitions = content.match(/\[\^(\d+)\]:\s*(.*)/g);
+  if (!footnoteDefinitions) return content;
+  
+  // 移除脚注定义
+  let processedContent = content;
+  footnoteDefinitions.forEach(def => {
+    processedContent = processedContent.replace(def, '');
+  });
+  
+  // 添加脚注定义到内容末尾
+  footnoteDefinitions.forEach(def => {
+    const match = def.match(/\[\^(\d+)\]:\s*(.*)/);
+    if (match) {
+      const id = `fn${match[1]}`;
+      const label = match[1];
+      const footnoteContent = match[2];
+      processedContent += `
+        <div class="footnote-definition" id="footnote-${id}" style="display: none;">
+          <div class="footnote-label">[${label}]</div>
+          <div class="footnote-content">${footnoteContent}</div>
+        </div>
+      `;
+    }
+  });
+  
+  return processedContent;
+}
+
 // 文章元数据接口
 interface PostMetadata {
   title: string;
@@ -119,6 +189,32 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
       // 替换 ___ 为 <hr class="hr-thin">
       processedContent = processedContent.replace(/^_{3,}$/gm, '<hr class="hr-thin">');
 
+      // 处理脚注定义（在渲染前处理）
+      
+      // 提取所有脚注定义
+      const footnoteDefinitions = processedContent.match(/\[\^(\d+)\]:\s*(.*)/g);
+      
+      // 渲染 Markdown
+      let renderedContent = marked.parse(processedContent) as string;
+      
+      // 添加脚注定义到内容末尾
+      if (footnoteDefinitions) {
+        footnoteDefinitions.forEach(def => {
+          const match = def.match(/\[\^(\d+)\]:\s*(.*)/);
+          if (match) {
+            const id = `fn${match[1]}`;
+            const label = match[1];
+            const footnoteContent = match[2];
+            renderedContent += `
+              <div class="footnote-definition" id="footnote-${id}" style="display: none;">
+                <div class="footnote-label">[${label}]</div>
+                <div class="footnote-content">${footnoteContent}</div>
+              </div>
+            `;
+          }
+        });
+      }
+      
       return {
         id: slug,
         slug,
@@ -126,7 +222,7 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
         date: metadata.date,
         tags: metadata.tags,
         description: metadata.description,
-        content: marked.parse(processedContent) as string,
+        content: renderedContent,
         readingTime: `${readingTimeResult.text}`,
       };
     })
