@@ -56,7 +56,6 @@ marked.use({
 // 添加 KaTeX 扩展
 marked.use(markedKatex({
   throwOnError: false,
-  katexOptions,
   delimiters: [
     { left: "$", right: "$", display: false },
     { left: "$$", right: "$$", display: true }
