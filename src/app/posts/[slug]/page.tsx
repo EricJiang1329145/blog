@@ -3,7 +3,8 @@ import { getPostBySlug } from "../../../../lib/posts";
 import type { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata | undefined> {
-	const post = await getPostBySlug(params.slug);
+	const resolvedParams = await params;
+	const post = await getPostBySlug(resolvedParams.slug);
 	if (!post) return;
 
 	return {
@@ -14,7 +15,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-	const { slug } = params;
+	const resolvedParams = await params;
+	const { slug } = resolvedParams;
 	const post = await getPostBySlug(slug);
 
 	if (!post) {
