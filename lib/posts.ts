@@ -29,6 +29,11 @@ marked.use({
   renderer
 });
 
+// 添加 KaTeX 扩展
+marked.use(markedKatex({
+  katexOptions
+}));
+
 // 文章元数据接口
 export interface PostMetadata {
   title: string;
