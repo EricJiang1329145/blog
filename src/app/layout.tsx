@@ -20,8 +20,6 @@ export default function RootLayout({
 		<html lang="zh-CN">
 			<head>
 				<script defer src="https://cloud.umami.is/script.js" data-website-id="b572d3db-28bf-4534-b2ed-6ccbfe769302"></script>
-				{/* 不蒜子统计代码 */}
-				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 			</head>
 			<body className="min-h-screen">
 				<StarBackground />
@@ -110,6 +108,153 @@ export default function RootLayout({
 									});
 								});
 							});
+						}
+					`
+				}} />
+
+				{/* 不蒜子统计代码 - 只在客户端执行 */}
+				<script dangerouslySetInnerHTML={{
+					__html: `
+						if (typeof window !== 'undefined') {
+							// 不蒜子统计功能
+							class BusuanziLoader {
+								constructor() {
+									this.retryCount = 0;
+									this.maxRetries = 3;
+									this.retryDelay = 1000;
+									this.isLoaded = false;
+								}
+
+								// 初始化
+								init() {
+									// 先尝试显示缓存数据
+									this.showCachedData();
+
+									// 当DOM加载完成后加载不蒜子
+									window.addEventListener('DOMContentLoaded', () => {
+										this.loadScript();
+									});
+
+									// 监听不蒜子初始化完成事件
+									window.addEventListener('busuanzi:init', () => {
+										console.log('不蒜子初始化完成');
+										this.isLoaded = true;
+										this.cacheData();
+									});
+
+									// 定期检查并更新数据
+									setInterval(() => {
+										if (this.isLoaded) {
+											this.cacheData();
+										}
+									}, 60000); // 每分钟更新一次缓存
+								}
+
+								// 加载脚本
+								loadScript() {
+									const script = document.createElement('script');
+									script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
+									script.defer = true; // 使用defer确保DOM解析完成后执行
+									script.onload = () => {
+										console.log('不蒜子脚本加载成功');
+										this.isLoaded = true;
+										// 给脚本一点时间初始化
+										setTimeout(() => {
+											this.cacheData();
+										}, 500);
+									};
+									script.onerror = () => {
+										console.error('不蒜子脚本加载失败，尝试备用地址');
+										this.tryFallback();
+									};
+									document.head.appendChild(script);
+								}
+
+								// 尝试备用地址
+								tryFallback() {
+									const fallbackScript = document.createElement('script');
+									fallbackScript.src = 'https://cdn.jsdelivr.net/npm/busuanzi.pure@2.3.0/busuanzi.pure.mini.js';
+									fallbackScript.defer = true;
+									fallbackScript.onload = () => {
+										console.log('不蒜子备用脚本加载成功');
+										this.isLoaded = true;
+										setTimeout(() => {
+											this.cacheData();
+										}, 500);
+									};
+									fallbackScript.onerror = () => {
+										console.error('不蒜子备用脚本加载失败');
+										this.retry();
+									};
+									document.head.appendChild(fallbackScript);
+								}
+
+								// 重试机制
+								retry() {
+									if (this.retryCount < this.maxRetries) {
+										this.retryCount++;
+										const delay = this.retryDelay * Math.pow(2, this.retryCount - 1);
+										console.log('不蒜子加载失败，' + delay + 'ms 后重试 (' + this.retryCount + '/' + this.maxRetries + ')');
+										setTimeout(() => {
+											this.loadScript();
+										}, delay);
+									} else {
+										console.error('不蒜子加载失败，已达到最大重试次数');
+										// 显示缓存数据或默认值
+										this.showCachedData();
+									}
+								}
+
+								// 缓存数据
+								cacheData() {
+									try {
+										const sitePv = document.getElementById('busuanzi_value_site_pv')?.textContent;
+										const siteUv = document.getElementById('busuanzi_value_site_uv')?.textContent;
+										const pagePv = document.getElementById('busuanzi_value_page_pv')?.textContent;
+
+										if (sitePv || siteUv || pagePv) {
+											const data = {
+												sitePv,
+												siteUv,
+												pagePv,
+												timestamp: Date.now()
+											};
+											localStorage.setItem('busuanzi_cache', JSON.stringify(data));
+										}
+									} catch (error) {
+										console.error('缓存不蒜子数据失败:', error);
+									}
+								}
+
+								// 显示缓存数据
+								showCachedData() {
+									try {
+										const cached = localStorage.getItem('busuanzi_cache');
+										if (cached) {
+											const data = JSON.parse(cached);
+											const now = Date.now();
+											// 缓存有效期24小时
+											if (now - data.timestamp < 24 * 60 * 60 * 1000) {
+												if (data.sitePv && document.getElementById('busuanzi_value_site_pv')) {
+													document.getElementById('busuanzi_value_site_pv').textContent = data.sitePv;
+												}
+												if (data.siteUv && document.getElementById('busuanzi_value_site_uv')) {
+													document.getElementById('busuanzi_value_site_uv').textContent = data.siteUv;
+												}
+												if (data.pagePv && document.getElementById('busuanzi_value_page_pv')) {
+													document.getElementById('busuanzi_value_page_pv').textContent = data.pagePv;
+												}
+											}
+										}
+									} catch (error) {
+										console.error('读取缓存数据失败:', error);
+									}
+								}
+							}
+
+							// 初始化不蒜子加载器
+							const busuanziLoader = new BusuanziLoader();
+							busuanziLoader.init();
 						}
 					`
 				}} />
