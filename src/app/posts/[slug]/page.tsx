@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getPostBySlug } from "../../../../lib/posts";
+import { incrementPageView, getPageView } from "../../../../lib/stats";
 import type { Metadata } from "next";
 import ReadingProgressBar from "../../../components/ReadingProgressBar";
 import ShareButton from "../../../components/ShareButton";
@@ -20,6 +21,12 @@ export default async function PostPage({ params }: { params: { slug: string } })
 	const resolvedParams = await params;
 	const { slug } = resolvedParams;
 	const post = await getPostBySlug(slug);
+	
+	// 增加文章浏览量
+	await incrementPageView(`post:${slug}`);
+	
+	// 获取文章浏览量
+	const postViews = await getPageView(`post:${slug}`);
 
 	if (!post) {
 		return (
@@ -51,6 +58,11 @@ export default async function PostPage({ params }: { params: { slug: string } })
 					<p className="neon-text-green">
 						<span id="busuanzi_value_page_pv"></span>
 						<span className="ml-1">次阅读</span>
+					</p>
+					<p>•</p>
+					<p className="neon-text-purple">
+						{postViews}
+						<span className="ml-1">次今日阅读</span>
 					</p>
 				</div>
 				<div className="flex flex-wrap justify-center gap-2">

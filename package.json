@@ -25,7 +25,8 @@
 		"next-sitemap": "^4.2.3",
 		"react": "^19.2.1",
 		"react-dom": "^19.2.1",
-		"reading-time": "^1.5.0"
+		"reading-time": "^1.5.0",
+		"recharts": "^3.7.0"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "3",
