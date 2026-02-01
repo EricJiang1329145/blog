@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { getAllPosts } from "../../lib/posts";
-import { incrementPageView, getDailyTotalPageViews } from "../../lib/stats";
 import type { Metadata } from "next";
 
 // 生成页面元数据
@@ -13,12 +12,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const posts = await getAllPosts();
-  
-  // 增加首页浏览量
-  await incrementPageView('home');
-  
-  // 获取每日总浏览量
-  const dailyViews = await getDailyTotalPageViews();
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -97,15 +90,8 @@ export default async function Home() {
                     <span className="text-sm ml-1">人次</span>
                   </span>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-card-bg/50 rounded-lg border border-neon-green/10">
-                  <span className="font-medium">今日浏览量</span>
-                  <span className="neon-text-green font-bold">
-                    {dailyViews}
-                    <span className="text-sm ml-1">次</span>
-                  </span>
-                </div>
                 <div className="text-xs text-center text-foreground/50 mt-4">
-                  数据统计由 <a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener noreferrer" className="hover:neon-text-green transition-all">不蒜子</a> 和 Cloudflare KV 提供
+                  数据统计由 <a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener noreferrer" className="hover:neon-text-green transition-all">不蒜子</a> 提供
                 </div>
               </div>
             </div>
@@ -141,7 +127,7 @@ export default async function Home() {
                       </div>
                     </div>
                     <div className="text-foreground/70 text-sm flex flex-col items-end">
-                      <p>{new Date(post.date).toLocaleDateString()}</p>
+                      <p>{new Date(post.date).toISOString().split('T')[0]}</p>
                       <p className="mt-2">{post.readingTime}</p>
                     </div>
                   </div>
