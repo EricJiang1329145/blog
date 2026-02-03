@@ -1,6 +1,7 @@
 ---
 title: 当AI的“过拟合”闯入高中课堂：为什么你刷了1000道题，数学依然不及格？
 slug: ai-overfitting-in-education
+date: 2026-02-03
 category: 数学教育
 tags:
   - 人工智能
