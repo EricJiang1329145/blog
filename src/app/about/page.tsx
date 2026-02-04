@@ -65,9 +65,9 @@ export default function About() {
 					<div className="space-y-2">
 						<h3 className="font-semibold text-foreground">部署平台</h3>
 						<ul className="list-disc list-inside text-foreground/70 space-y-1">
-							<li><a href="https://vercel.com/" className="text-neon-green hover:underline">Vercel</a></li>
-							<li><a href="https://workers.cloudflare.com/" className="text-neon-green hover:underline">Cloudflare Workers</a></li>
-						</ul>
+								<li><a href="https://workers.cloudflare.com/" className="text-neon-green hover:underline">Cloudflare Workers</a></li>
+								<li><a href="https://pages.cloudflare.com/" className="text-neon-green hover:underline">Cloudflare Pages</a></li>
+							</ul>
 					</div>
 				</div>
 			</section>
