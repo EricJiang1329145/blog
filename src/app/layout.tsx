@@ -19,6 +19,8 @@ export default function RootLayout({
 	return (
 		<html lang="zh-CN">
 			<head>
+				{/* 不蒜子访问统计脚本 */}
+				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 			</head>
 			<body className="min-h-screen">
 				<StarBackground />
