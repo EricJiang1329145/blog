@@ -1,10 +1,16 @@
 'use client';
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { initAllButtonEffects } from "@/lib/buttonEffects";
 
 export default function Navigation() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+	useEffect(() => {
+		// 初始化按钮效果
+		initAllButtonEffects();
+	}, []);
 
 	const toggleMobileMenu = () => {
 		setMobileMenuOpen(!mobileMenuOpen);
@@ -19,17 +25,17 @@ export default function Navigation() {
 				
 				{/* 桌面导航 */}
 				<nav className="hidden md:flex space-x-8">
-					<Link href="/" className="text-foreground hover:neon-text-green transition-all">
+					<Link href="/" className="text-foreground nav-link-strong">
 						首页
 					</Link>
-					<Link href="/about" className="text-foreground hover:neon-text-green transition-all">
+					<Link href="/about" className="text-foreground nav-link-strong">
 						关于
 					</Link>
 				</nav>
 				
 				{/* 移动端导航按钮 */}
 				<button 
-					className="md:hidden text-foreground p-2 rounded-full hover:bg-white/10 transition-all"
+					className="md:hidden text-foreground p-2 rounded-full mobile-menu-button-strong btn-strong-interactive"
 					onClick={toggleMobileMenu}
 					aria-label={mobileMenuOpen ? "关闭菜单" : "打开菜单"}
 				>
@@ -56,14 +62,14 @@ export default function Navigation() {
 					<div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
 						<Link 
 							href="/" 
-							className="text-foreground hover:neon-text-green transition-all py-2"
+							className="text-foreground nav-link-strong py-2"
 							onClick={toggleMobileMenu}
 						>
 							首页
 						</Link>
 						<Link 
 							href="/about" 
-							className="text-foreground hover:neon-text-green transition-all py-2"
+							className="text-foreground nav-link-strong py-2"
 							onClick={toggleMobileMenu}
 						>
 							关于

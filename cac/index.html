@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玻璃效果对比 Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="glass-effect-neon header">
+            <h1>玻璃效果对比 Demo</h1>
+            <p>探索不同风格的玻璃态设计效果</p>
+            <div class="control-panel">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="background-toggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">显示背景图片</span>
+                </label>
+            </div>
+        </header>
+
+        <main class="content">
+            <section class="card-section">
+                <h2 class="section-title">基础玻璃效果</h2>
+                <div class="card-container">
+                    <div class="glass-effect card">
+                        <h3>标准玻璃</h3>
+                        <p>基础的玻璃态效果，带有轻微的模糊和透明度</p>
+                        <div class="demo-box"></div>
+                    </div>
+
+                    <div class="glass-effect-neon card">
+                        <h3>霓虹玻璃</h3>
+                        <p>带有霓虹边缘光效的玻璃态效果</p>
+                        <div class="demo-box neon"></div>
+                    </div>
+
+                    <div class="glass-effect-animated card">
+                        <h3>动态玻璃</h3>
+                        <p>带有动画效果的玻璃态设计</p>
+                        <div class="demo-box animated"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-section">
+                <h2 class="section-title">透明度对比</h2>
+                <div class="card-container">
+                    <div class="glass-effect glass-opacity-low card">
+                        <h3>低透明度</h3>
+                        <p>背景更加不透明，模糊效果较弱</p>
+                        <div class="demo-box opacity-low"></div>
+                    </div>
+
+                    <div class="glass-effect card">
+                        <h3>中等透明度</h3>
+                        <p>平衡的透明度和模糊效果</p>
+                        <div class="demo-box opacity-medium"></div>
+                    </div>
+
+                    <div class="glass-effect glass-opacity-high card">
+                        <h3>高透明度</h3>
+                        <p>背景更加透明，模糊效果更强</p>
+                        <div class="demo-box opacity-high"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-section">
+                <h2 class="section-title">边框样式</h2>
+                <div class="card-container">
+                    <div class="glass-effect glass-border-thin card">
+                        <h3>细边框</h3>
+                        <p>精致的细边框设计</p>
+                        <div class="demo-box border-thin"></div>
+                    </div>
+
+                    <div class="glass-effect card">
+                        <h3>标准边框</h3>
+                        <p>平衡的边框宽度</p>
+                        <div class="demo-box border-standard"></div>
+                    </div>
+
+                    <div class="glass-effect glass-border-thick card">
+                        <h3>粗边框</h3>
+                        <p>更加明显的边框效果</p>
+                        <div class="demo-box border-thick"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card-section">
+                <h2 class="section-title">交互效果</h2>
+                <div class="card-container">
+                    <div class="glass-effect glass-interactive card">
+                        <h3>悬停效果</h3>
+                        <p>鼠标悬停时的动态变化</p>
+                        <button class="glass-button">点击我</button>
+                    </div>
+
+                    <div class="glass-effect glass-interactive-strong card">
+                        <h3>强交互效果</h3>
+                        <p>更加明显的悬停反馈</p>
+                        <button class="glass-button strong">点击我</button>
+                    </div>
+
+                    <div class="glass-effect glass-interactive-subtle card">
+                        <h3>微妙交互</h3>
+                        <p>更加细腻的悬停效果</p>
+                        <button class="glass-button subtle">点击我</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="glass-effect footer">
+            <p>玻璃效果对比 Demo | 基于 CSS 实现的现代 UI 设计</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -9,6 +9,13 @@ import readingTime from 'reading-time';
 // 配置 marked 库
 const renderer = new marked.Renderer();
 
+// 自定义链接渲染
+renderer.link = ({ href, title, text }) => {
+  const linkClasses = 'link-strong link-glass';
+  const titleAttr = title ? `title="${title}"` : '';
+  return `<a href="${href}" ${titleAttr} class="${linkClasses}">${text}</a>`;
+};
+
 // 代码高亮配置
 renderer.code = ({ text, lang }) => {
   const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -23,7 +30,7 @@ renderer.code = ({ text, lang }) => {
     <div class="code-block-container">
       <div class="code-block-header">
         <span class="code-language">${validLanguage}</span>
-        <button class="copy-button" data-code="${encodeURIComponent(text)}">
+        <button class="copy-button copy-button-strong btn-strong-interactive" data-code="${encodeURIComponent(text)}">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
             <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
@@ -74,7 +81,7 @@ marked.use({
         return `
           <span class="footnote-ref">
             <button 
-              class="footnote-button" 
+              class="footnote-button footnote-button-strong btn-strong-interactive" 
               data-footnote-id="${token.id}"
               aria-label="脚注 ${token.label}"
             >

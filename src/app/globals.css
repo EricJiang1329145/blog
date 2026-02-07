@@ -97,7 +97,7 @@ body {
 /* 霓虹发光动画 */
 @keyframes neon-glow-green {
 	from {
-		text-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+		text-shadow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green), 0 0 25px var(--neon-green);
 	}
 	to {
 		text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 30px var(--neon-green), 0 0 40px var(--neon-green);
@@ -106,7 +106,7 @@ body {
 
 @keyframes neon-glow-purple {
 	from {
-		text-shadow: 0 0 5px var(--neon-purple), 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple);
+		text-shadow: 0 0 8px var(--neon-purple), 0 0 15px var(--neon-purple), 0 0 25px var(--neon-purple);
 	}
 	to {
 		text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple), 0 0 30px var(--neon-purple), 0 0 40px var(--neon-purple);
@@ -115,7 +115,7 @@ body {
 
 @keyframes neon-glow-subtitle {
 	from {
-		text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+		text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue);
 	}
 	to {
 		text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue), 0 0 20px var(--neon-blue);
@@ -352,25 +352,52 @@ body {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	background: rgba(0, 255, 136, 0.1);
+	background: rgba(30, 30, 40, 0.6);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
 	color: var(--neon-green);
-	border: 1px solid rgba(0, 255, 136, 0.3);
-	border-radius: 4px;
+	border: 1px solid rgba(0, 255, 136, 0.2);
+	border-radius: 6px;
 	padding: 0.25rem 0.5rem;
 	font-size: 0.75rem;
 	cursor: pointer;
-	transition: all 0.3s ease;
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	position: relative;
+	overflow: hidden;
+}
+
+.copy-button::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(
+		45deg,
+		transparent,
+		rgba(0, 255, 136, 0.1),
+		transparent
+	);
+	transform: rotate(45deg);
+	animation: glass-shimmer 6s linear infinite;
+	pointer-events: none;
+	z-index: -1;
 }
 
 .copy-button:hover {
-	background: rgba(0, 255, 136, 0.2);
-	box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+	background: rgba(30, 30, 40, 0.8);
+	box-shadow: 0 6px 20px rgba(0, 255, 136, 0.2), 0 0 12px rgba(0, 255, 136, 0.3);
+	transform: translateY(-2px);
+	border-color: rgba(0, 255, 136, 0.3);
 }
 
 .copy-button.copied {
-	background: rgba(0, 255, 136, 0.3);
+	background: rgba(30, 30, 40, 0.9);
 	color: var(--neon-green);
-	box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+	box-shadow: 0 8px 24px rgba(0, 255, 136, 0.25), 0 0 15px rgba(0, 255, 136, 0.4);
+	border-color: rgba(0, 255, 136, 0.4);
+	transform: translateY(-2px);
 }
 
 .code-content-wrapper {
@@ -609,4 +636,295 @@ body {
 	.footnote-tooltip {
 		width: 250px;
 	}
+}
+
+/* 强交互效果按钮样式 */
+.btn-strong-interactive {
+	position: relative;
+	overflow: hidden;
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-strong-interactive:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 24px rgba(0, 255, 136, 0.25);
+	border-color: rgba(0, 255, 136, 0.4);
+}
+
+.btn-strong-interactive:active {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+}
+
+/* 按钮波纹效果 */
+.btn-strong-interactive {
+	position: relative;
+	overflow: hidden;
+}
+
+.ripple {
+	position: absolute;
+	border-radius: 50%;
+	background: rgba(0, 255, 136, 0.3);
+	transform: scale(0);
+	animation: ripple-animation 0.6s linear;
+	pointer-events: none;
+}
+
+@keyframes ripple-animation {
+	to {
+		transform: scale(4);
+		opacity: 0;
+	}
+}
+
+/* 导航按钮强交互效果 */
+.nav-link-strong {
+	position: relative;
+	transition: all 0.3s ease;
+}
+
+.nav-link-strong:hover {
+	color: var(--neon-green);
+	text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+	transform: translateY(-2px);
+}
+
+.nav-link-strong::after {
+	content: '';
+	position: absolute;
+	bottom: -4px;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background: var(--neon-green);
+	box-shadow: 0 0 10px var(--neon-green);
+	transition: width 0.3s ease;
+}
+
+.nav-link-strong:hover::after {
+	width: 100%;
+}
+
+/* 分享按钮强交互效果 */
+.share-button-strong {
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.share-button-strong:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 24px rgba(0, 255, 136, 0.25);
+	background: rgba(0, 255, 136, 0.2);
+}
+
+/* 移动菜单按钮强交互效果 */
+.mobile-menu-button-strong {
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	border-radius: 50%;
+}
+
+.mobile-menu-button-strong:hover {
+	transform: rotate(90deg) scale(1.1);
+	box-shadow: 0 0 15px var(--neon-green);
+	background: rgba(0, 255, 136, 0.1);
+}
+
+/* 复制按钮强交互效果 */
+.copy-button-strong {
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.copy-button-strong:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 16px rgba(0, 255, 136, 0.3);
+	background: rgba(0, 255, 136, 0.2);
+}
+
+.copy-button-strong.copied {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 20px rgba(0, 255, 136, 0.4);
+	background: rgba(0, 255, 136, 0.3);
+}
+
+/* 脚注按钮强交互效果 */
+.footnote-button-strong {
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footnote-button-strong:hover {
+	transform: translateY(-2px) scale(1.1);
+	box-shadow: 0 6px 16px rgba(0, 255, 136, 0.3);
+	background: rgba(0, 255, 136, 0.15);
+}
+
+/* 链接强交互效果 */
+.link-strong {
+	position: relative;
+	color: var(--neon-green);
+	text-decoration: none;
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-strong:hover {
+	color: var(--neon-green);
+	text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+	transform: translateY(-2px);
+}
+
+.link-strong::after {
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background: var(--neon-green);
+	box-shadow: 0 0 10px var(--neon-green);
+	transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-strong:hover::after {
+	width: 100%;
+}
+
+/* 链接动态玻璃效果 */
+.link-glass {
+	position: relative;
+	display: inline-block;
+	padding: 0.25rem 0.5rem;
+	border-radius: 6px;
+	overflow: hidden;
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-glass::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(30, 30, 40, 0.6);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border: 1px solid rgba(0, 255, 136, 0.2);
+	border-radius: 6px;
+	box-shadow: 0 4px 16px rgba(0, 255, 136, 0.15), 
+				0 0 8px rgba(0, 255, 136, 0.2);
+	z-index: -1;
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-glass::after {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(
+		45deg,
+		transparent,
+		rgba(0, 255, 136, 0.1),
+		transparent
+	);
+	transform: rotate(45deg);
+	animation: glass-shimmer 6s linear infinite;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.link-glass:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 24px rgba(0, 255, 136, 0.25);
+}
+
+.link-glass:hover::before {
+	background: rgba(30, 30, 40, 0.8);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border-color: rgba(0, 255, 136, 0.3);
+	box-shadow: 0 6px 20px rgba(0, 255, 136, 0.2), 
+				0 0 12px rgba(0, 255, 136, 0.3);
+}
+
+/* 玻璃闪烁动画 */
+@keyframes glass-shimmer {
+	0% {
+		transform: translateX(-100%) translateY(-100%) rotate(45deg);
+	}
+	100% {
+		transform: translateX(100%) translateY(100%) rotate(45deg);
+	}
+}
+
+/* 通用按钮强交互效果 */
+button {
+	position: relative;
+	overflow: hidden;
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:not(.copy-button):not(.footnote-button) {
+	background: rgba(30, 30, 40, 0.6);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border: 1px solid rgba(0, 255, 136, 0.2);
+	color: var(--neon-green);
+	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:not(.copy-button):not(.footnote-button)::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: linear-gradient(
+		45deg,
+		transparent,
+		rgba(0, 255, 136, 0.1),
+		transparent
+	);
+	transform: rotate(45deg);
+	animation: glass-shimmer 6s linear infinite;
+	pointer-events: none;
+	z-index: -1;
+}
+
+button:not(.copy-button):not(.footnote-button):hover {
+	background: rgba(30, 30, 40, 0.8);
+	box-shadow: 0 6px 20px rgba(0, 255, 136, 0.2), 0 0 12px rgba(0, 255, 136, 0.3);
+	transform: translateY(-2px);
+	border-color: rgba(0, 255, 136, 0.3);
+}
+
+/* 自动链接样式 */
+a[href^="http"] {
+	color: var(--neon-green);
+	text-decoration: none;
+	transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+a[href^="http"]:hover {
+	color: var(--neon-green);
+	text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+	transform: translateY(-2px);
+}
+
+a[href^="http"]::after {
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background: var(--neon-green);
+	box-shadow: 0 0 10px var(--neon-green);
+	transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+a[href^="http"]:hover::after {
+	width: 100%;
 }
