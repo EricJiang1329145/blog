@@ -3,6 +3,7 @@ import { getPostBySlug } from "../../../../lib/posts";
 import type { Metadata } from "next";
 import ReadingProgressBar from "../../../components/ReadingProgressBar";
 import ShareButton from "../../../components/ShareButton";
+import PageViews from "../../../components/PageViews";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata | undefined> {
 	const resolvedParams = await params;
@@ -48,10 +49,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
 					<p>•</p>
 					<p>{post.readingTime}</p>
 					<p>•</p>
-					<p className="neon-text-green">
-						<span id="busuanzi_value_page_pv"></span>
-						<span className="ml-1">次阅读</span>
-					</p>
+					<PageViews />
 				</div>
 				<div className="flex flex-wrap justify-center gap-2">
 					{post.tags.map((tag) => (
@@ -63,9 +61,9 @@ export default async function PostPage({ params }: { params: { slug: string } })
 			</div>
 
 			{/* 文章内容 */}
-			<article className="bg-card-bg p-6 md:p-8 rounded-lg border border-neon-green/20 mb-12">
-				<div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
-			</article>
+					 <article className="bg-card-bg p-6 md:p-8 rounded-lg border border-neon-green/20 mb-12">
+						 <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
+					 </article>
 
 			{/* 分享按钮 */}
 			<ShareButton slug={slug} title={post.title} />

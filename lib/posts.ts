@@ -77,12 +77,16 @@ export interface Post {
   date: string;
   tags: string[];
   description: string;
-  content: string;
+  content?: string;
   readingTime: string;
 }
 
 // 导入预生成的文章数据
 import { posts as postsData, tags as tagsData } from './data/posts';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import readingTime from 'reading-time';
 
 // 获取所有文章
 export async function getAllPosts(): Promise<Post[]> {
@@ -91,7 +95,10 @@ export async function getAllPosts(): Promise<Post[]> {
 
 // 根据 slug 获取单篇文章
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  return postsData.find(post => post.slug === slug) || null;
+  const post = postsData.find(post => post.slug === slug);
+  if (!post) return null;
+
+  return post;
 }
 
 // 获取所有标签

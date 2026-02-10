@@ -21,7 +21,7 @@ export default function RootLayout({
 		<html lang="zh-CN">
 			<head>
 				{/* 不蒜子访问统计脚本 */}
-				<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+				<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 				{/* umamiis 统计脚本 */}
 				<script defer src="https://cloud.umami.is/script.js" data-website-id="b572d3db-28bf-4534-b2ed-6ccbfe769302"></script>
 			</head>

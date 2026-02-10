@@ -8,10 +8,14 @@ import React, { useEffect, useState } from 'react';
  */
 export default function WebsiteAnalytics() {
   const [isClient, setIsClient] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // 只在客户端执行
   useEffect(() => {
     setIsClient(true);
+    setLoading(false);
+    setScriptLoaded(true);
   }, []);
 
   return (
@@ -22,21 +26,19 @@ export default function WebsiteAnalytics() {
           <div className="flex justify-between items-center p-3 bg-card-bg/50 rounded-lg border border-neon-green/10">
             <span className="font-medium">站点总访问量</span>
             <span className="neon-text-green font-bold">
-              {isClient && <span id="busuanzi_value_site_pv"></span>}
-              {!isClient && <span>加载中...</span>}
+              <span id="busuanzi_value_site_pv"></span>
               <span className="text-sm ml-1">次</span>
             </span>
           </div>
           <div className="flex justify-between items-center p-3 bg-card-bg/50 rounded-lg border border-neon-green/10">
             <span className="font-medium">站点访客数</span>
             <span className="neon-text-purple font-bold">
-              {isClient && <span id="busuanzi_value_site_uv"></span>}
-              {!isClient && <span>加载中...</span>}
+              <span id="busuanzi_value_site_uv"></span>
               <span className="text-sm ml-1">人次</span>
             </span>
           </div>
           <div className="text-xs text-center text-foreground/50 mt-4">
-            数据统计由 <a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener noreferrer" className="hover:neon-text-green transition-all">不蒜子</a> 提供
+            数据统计由 <a href="https://busuanzi.ibruce.info/" target="_blank" rel="noopener noreferrer" className="hover:neon-text-green transition-all">不蒜子</a> 提供
           </div>
         </div>
       </div>
