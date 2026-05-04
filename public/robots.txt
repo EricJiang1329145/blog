@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://blog.jmr-eric.workers.dev
+
+# Sitemaps
+Sitemap: https://blog.jmr-eric.workers.dev/sitemap.xml

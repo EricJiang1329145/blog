@@ -1,16 +1,16 @@
 import Link from "next/link";
-import { getPostsByTag } from "../../../../lib/posts";
+import { getPostsByCategory } from "../../../../lib/posts";
 import ScrollReveal from "../../../components/ScrollReveal";
 
-export default async function TagPage({ params }: { params: { tag: string } }) {
-  const { tag } = params;
-  const posts = await getPostsByTag(tag);
+export default async function CategoryPage({ params }: { params: { category: string } }) {
+  const { category } = params;
+  const posts = await getPostsByCategory(category);
 
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-14 text-center">
         <h1 className="text-3xl font-bold mb-3 tracking-tight" style={{ fontFamily: 'var(--font-serif)' }}>
-          {tag}
+          {category}
         </h1>
         <p className="text-text-muted text-sm font-[family-name:var(--font-sans)]">{posts.length} 篇文章</p>
       </div>
@@ -18,7 +18,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
       <div className="space-y-6">
         {posts.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-text-muted text-lg font-[family-name:var(--font-sans)]">该标签下暂无文章</p>
+            <p className="text-text-muted text-lg font-[family-name:var(--font-sans)]">该分类下暂无文章</p>
           </div>
         ) : (
           posts.map((post, i) => (
@@ -35,13 +35,13 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
                     {post.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {post.tags.map((t) => (
+                    {post.tags.map((tag) => (
                       <Link
-                        key={t}
-                        href={`/tags/${t}`}
-                        className={t === tag ? 'tag-pill tag-pill-active' : 'tag-pill'}
+                        key={tag}
+                        href={`/tags/${tag}`}
+                        className="tag-pill"
                       >
-                        {t}
+                        {tag}
                       </Link>
                     ))}
                   </div>
@@ -61,11 +61,11 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
       </div>
 
       <div className="mt-12 text-center">
-        <Link href="/tags" className="inline-flex items-center gap-1.5 text-accent hover:text-accent-secondary transition-colors font-[family-name:var(--font-sans)] text-sm">
+        <Link href="/categories" className="inline-flex items-center gap-1.5 text-accent hover:text-accent-secondary transition-colors font-[family-name:var(--font-sans)] text-sm">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
-          返回标签列表
+          返回分类列表
         </Link>
       </div>
     </div>
@@ -73,7 +73,7 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
 }
 
 export async function generateStaticParams() {
-  const { getAllTags } = await import("../../../../lib/posts");
-  const tags = await getAllTags();
-  return tags.map((tag) => ({ tag }));
+  const { getAllCategories } = await import("../../../../lib/posts");
+  const categories = await getAllCategories();
+  return categories.map((category) => ({ category }));
 }

@@ -16,6 +16,13 @@ renderer.link = ({ href, title, text }) => {
   return `<a href="${href}" ${titleAttr} class="${linkClasses}">${text}</a>`;
 };
 
+// 自定义图片渲染
+renderer.image = ({ href, title, text }) => {
+  const titleAttr = title ? `title="${title}"` : '';
+  const altAttr = text ? `alt="${text}"` : '';
+  return `<img src="${href}" ${altAttr} ${titleAttr} loading="lazy" class="prose-image" />`;
+};
+
 // 代码高亮配置
 renderer.code = ({ text, lang }) => {
   const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -130,6 +137,7 @@ function processFootnotes(content: string): string {
 interface PostMetadata {
   title: string;
   date: string;
+  category?: string;
   tags: string[];
   description: string;
 }
@@ -140,6 +148,7 @@ interface Post {
   slug: string;
   title: string;
   date: string;
+  category?: string;
   tags: string[];
   description: string;
   content: string;
@@ -227,6 +236,7 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
         slug,
         title: metadata.title,
         date: metadata.date,
+        category: metadata.category,
         tags: metadata.tags,
         description: metadata.description,
         content: renderedContent,
@@ -238,10 +248,15 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
   // 按日期降序排序
   const sortedPosts = allPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   
-  // 提取标签
+  // 提取标签和分类
   const tagsSet = new Set<string>();
-  sortedPosts.forEach(post => post.tags.forEach(tag => tagsSet.add(tag)));
+  const categoriesSet = new Set<string>();
+  sortedPosts.forEach(post => {
+    post.tags.forEach(tag => tagsSet.add(tag));
+    if (post.category) categoriesSet.add(post.category);
+  });
   const tags = Array.from(tagsSet).sort();
+  const categories = Array.from(categoriesSet).sort();
   
   // 创建输出目录
   const outputDirectory = path.join(process.cwd(), 'lib', 'data');
@@ -255,10 +270,59 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
     `export const posts = ${JSON.stringify(sortedPosts, null, 2)};
 
 export const tags = ${JSON.stringify(tags, null, 2)};
+
+export const categories = ${JSON.stringify(categories, null, 2)};
 `
   );
   
   console.log(`Generated posts data for ${sortedPosts.length} posts`);
+
+  // 生成 RSS feed
+  const siteUrl = 'https://blog.jmr-eric.workers.dev';
+  const rssItems = sortedPosts.map(post => `
+    <item>
+      <title><![CDATA[${post.title}]]></title>
+      <link>${siteUrl}/posts/${post.slug}</link>
+      <guid>${siteUrl}/posts/${post.slug}</guid>
+      <description><![CDATA[${post.description}]]></description>
+      <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+      ${post.tags.map(tag => `<category>${tag}</category>`).join('\n      ')}
+    </item>`).join('');
+
+  const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Eric's Blog — 技术与人文的思考笔记</title>
+    <link>${siteUrl}</link>
+    <description>关于技术、社会与生活的思考笔记</description>
+    <language>zh-CN</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml"/>
+    ${rssItems}
+  </channel>
+</rss>`;
+
+  const publicDir = path.join(process.cwd(), 'public');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+  fs.writeFileSync(path.join(publicDir, 'rss.xml'), rss);
+  console.log('Generated rss.xml');
+
+  // 生成搜索索引
+  const searchIndex = sortedPosts.map(p => ({
+    slug: p.slug,
+    title: p.title,
+    description: p.description,
+    tags: p.tags,
+    category: p.category,
+    date: p.date,
+  }));
+  fs.writeFileSync(
+    path.join(publicDir, 'search-index.json'),
+    JSON.stringify(searchIndex)
+  );
+  console.log('Generated search-index.json');
 }
 
 // 执行生成

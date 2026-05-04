@@ -15,6 +15,13 @@ renderer.link = ({ href, title, text }) => {
   return `<a href="${href}" ${titleAttr} class="${linkClasses}">${text}</a>`;
 };
 
+// 自定义图片渲染
+renderer.image = ({ href, title, text }) => {
+  const titleAttr = title ? `title="${title}"` : '';
+  const altAttr = text ? `alt="${text}"` : '';
+  return `<img src="${href}" ${altAttr} ${titleAttr} loading="lazy" class="prose-image" />`;
+};
+
 // 代码高亮配置
 renderer.code = ({ text, lang }) => {
   const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -65,6 +72,7 @@ marked.use(markedKatex({
 export interface PostMetadata {
   title: string;
   date: string;
+  category?: string;
   tags: string[];
   description: string;
 }
@@ -75,6 +83,7 @@ export interface Post {
   slug: string;
   title: string;
   date: string;
+  category?: string;
   tags: string[];
   description: string;
   content?: string;
@@ -82,7 +91,7 @@ export interface Post {
 }
 
 // 导入预生成的文章数据
-import { posts as postsData, tags as tagsData } from './data/posts';
+import { posts as postsData, tags as tagsData, categories as categoriesData } from './data/posts';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -110,4 +119,15 @@ export async function getAllTags(): Promise<string[]> {
 export async function getPostsByTag(tag: string): Promise<Post[]> {
   const posts = await getAllPosts();
   return posts.filter(post => post.tags.includes(tag));
+}
+
+// 获取所有分类
+export async function getAllCategories(): Promise<string[]> {
+  return categoriesData;
+}
+
+// 按分类获取文章
+export async function getPostsByCategory(category: string): Promise<Post[]> {
+  const posts = await getAllPosts();
+  return posts.filter(post => post.category === category);
 }

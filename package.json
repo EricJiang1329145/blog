@@ -32,6 +32,7 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "3",
 		"@tailwindcss/postcss": "4.1.17",
+		"@types/jest": "^30.0.0",
 		"@types/node": "24.10.1",
 		"@types/react": "19.2.7",
 		"@types/react-dom": "19.2.3",
@@ -44,14 +45,15 @@
 	},
 	"private": true,
 	"scripts": {
-		"build": "node scripts/build-posts.mjs && next build && opennextjs-cloudflare build --skipNextBuild",
+		"build": "node scripts/build-posts.mjs && next build && next-sitemap && opennextjs-cloudflare build --skipNextBuild",
 		"build:opennext": "opennextjs-cloudflare build",
-		"build:full": "npm run build",
+		"build:full": "node scripts/build-posts.mjs && next build && next-sitemap && opennextjs-cloudflare build --skipNextBuild",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
 		"check": "npm run build && tsc",
 		"deploy": "npm run build:full && opennextjs-cloudflare deploy",
 		"dev": "node scripts/build-posts.mjs && next dev",
 		"lint": "next lint",
+		"test": "jest",
 		"preview": "npm run build:full && opennextjs-cloudflare preview",
 		"start": "next start",
 		"generate-posts": "node scripts/build-posts.mjs"

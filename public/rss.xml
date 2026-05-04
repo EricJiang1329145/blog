@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Eric's Blog — 技术与人文的思考笔记</title>
+    <link>https://blog.jmr-eric.workers.dev</link>
+    <description>关于技术、社会与生活的思考笔记</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 04 May 2026 09:08:47 GMT</lastBuildDate>
+    <atom:link href="https://blog.jmr-eric.workers.dev/rss.xml" rel="self" type="application/rss+xml"/>
+    
+    <item>
+      <title><![CDATA[理想化与 AFO：一个竞赛生的迟来反思]]></title>
+      <link>https://blog.jmr-eric.workers.dev/posts/idealization-and-afo</link>
+      <guid>https://blog.jmr-eric.workers.dev/posts/idealization-and-afo</guid>
+      <description><![CDATA[一个在初中错过 OI、高中才爱上它却不得不 AFO 的竞赛生，谈谈我眼中的"理想化"问题。]]></description>
+      <pubDate>Sun, 03 May 2026 00:00:00 GMT</pubDate>
+      <category>OI</category>
+      <category>理想化</category>
+      <category>反思</category>
+      <category>高中</category>
+    </item>
+    <item>
+      <title><![CDATA[红包里的"社保"与我的第三次麻木：当习俗不再懂你]]></title>
+      <link>https://blog.jmr-eric.workers.dev/posts/red-packet</link>
+      <guid>https://blog.jmr-eric.workers.dev/posts/red-packet</guid>
+      <description><![CDATA[元宵刚过，年的味道终于在孝感的街头巷尾淡了下去。收拾屋子时，我又看到了那个熟悉的红色信封。它静静地躺在抽屉角落，像是一个未被拆封的谜题。]]></description>
+      <pubDate>Sun, 22 Feb 2026 00:00:00 GMT</pubDate>
+      <category>红包</category>
+      <category>习俗</category>
+      <category>春节</category>
+      <category>思考</category>
+    </item>
+    <item>
+      <title><![CDATA[当参数成为信仰：科技消费主义下的身份迷思]]></title>
+      <link>https://blog.jmr-eric.workers.dev/posts/tech-consumerism-identity</link>
+      <guid>https://blog.jmr-eric.workers.dev/posts/tech-consumerism-identity</guid>
+      <description><![CDATA[探讨科技消费主义如何将产品参数转化为身份信仰，以及这种现象对自我认知的影响。]]></description>
+      <pubDate>Tue, 10 Feb 2026 00:00:00 GMT</pubDate>
+      <category>科技</category>
+      <category>消费主义</category>
+      <category>身份认同</category>
+      <category>鲍德里亚</category>
+    </item>
+    <item>
+      <title><![CDATA[AI 热之后的冷思考：当期待撞上现实]]></title>
+      <link>https://blog.jmr-eric.workers.dev/posts/ai-hype-cycle-reflection</link>
+      <guid>https://blog.jmr-eric.workers.dev/posts/ai-hype-cycle-reflection</guid>
+      <description><![CDATA[从 ChatGPT 横空出世到"天天有好消息"，为什么我们反而更清醒了？本文分析了 AI 技术成熟度周期中的期望修正、行业乱象，以及我们该如何理性与 AI 共处。]]></description>
+      <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
+      <category>AI</category>
+      <category>技术思考</category>
+      <category>大语言模型</category>
+      <category>行业观察</category>
+    </item>
+    <item>
+      <title><![CDATA[当AI的“过拟合”闯入高中课堂：为什么你刷了1000道题，数学依然不及格？]]></title>
+      <link>https://blog.jmr-eric.workers.dev/posts/ai-overfitting-in-education</link>
+      <guid>https://blog.jmr-eric.workers.dev/posts/ai-overfitting-in-education</guid>
+      <description><![CDATA[探讨AI中的过拟合现象与高中数学学习的相似性，分析机械记忆学习的弊端，提供抗过拟合的学习策略。]]></description>
+      <pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate>
+      <category>人工智能</category>
+      <category>数学学习</category>
+      <category>过拟合</category>
+      <category>学习方法</category>
+    </item>
+    <item>
+      <title><![CDATA[欢迎来到 Neon Cosmos]]></title>
+      <link>https://blog.jmr-eric.workers.dev/posts/hello-neon-cosmos</link>
+      <guid>https://blog.jmr-eric.workers.dev/posts/hello-neon-cosmos</guid>
+      <description><![CDATA[欢迎来到 Neon Cosmos 博客，探索技术、数学与太空的奇妙世界。]]></description>
+      <pubDate>Sat, 31 Jan 2026 00:00:00 GMT</pubDate>
+      <category>介绍</category>
+      <category>技术</category>
+      <category>Next.js</category>
+    </item>
+    <item>
+      <title><![CDATA[Markdown 格式测试]]></title>
+      <link>https://blog.jmr-eric.workers.dev/posts/markdown-test</link>
+      <guid>https://blog.jmr-eric.workers.dev/posts/markdown-test</guid>
+      <description><![CDATA[测试各种 Markdown 格式的渲染效果]]></description>
+      <pubDate>Sat, 31 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Markdown</category>
+      <category>测试</category>
+      <category>格式</category>
+    </item>
+  </channel>
+</rss>
