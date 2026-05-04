@@ -201,3 +201,4 @@ dist
 
 ### OpenNext ###
 next-env.d.ts
+.worktrees/
