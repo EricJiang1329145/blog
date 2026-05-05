@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { validateToken } from '../lib/github';
+import { useState, useEffect } from 'react';
+import { getOAuthUrl, exchangeCodeForToken, validateToken } from '../lib/github';
+import { open } from '@tauri-apps/plugin-shell';
 
 export function useAuth() {
   const [token, setToken] = useState<string | null>(
@@ -8,21 +9,38 @@ export function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const saveToken = async (newToken: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const valid = await validateToken(newToken);
-      if (valid) {
-        localStorage.setItem('github_token', newToken);
-        setToken(newToken);
-      } else {
-        setError('Invalid token');
+  // Handle OAuth callback on app load
+  useEffect(() => {
+    const handleCallback = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if (code) {
+        setLoading(true);
+        try {
+          const accessToken = await exchangeCodeForToken(code);
+          localStorage.setItem('github_token', accessToken);
+          setToken(accessToken);
+          // Clean URL
+          window.history.replaceState({}, '', '/');
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Auth failed');
+        } finally {
+          setLoading(false);
+        }
       }
+    };
+
+    if (window.location.search.includes('code=')) {
+      handleCallback();
+    }
+  }, []);
+
+  const login = async () => {
+    try {
+      const url = getOAuthUrl();
+      await open(url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Validation failed');
-    } finally {
-      setLoading(false);
+      setError('Failed to open browser');
     }
   };
 
@@ -31,5 +49,5 @@ export function useAuth() {
     setToken(null);
   };
 
-  return { token, saveToken, logout, loading, error, isAuthenticated: !!token };
+  return { token, login, logout, loading, error, isAuthenticated: !!token };
 }

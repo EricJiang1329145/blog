@@ -1,43 +1,28 @@
-import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 export function TokenInput() {
-  const { saveToken, loading, error } = useAuth();
-  const [input, setInput] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      saveToken(input.trim());
-    }
-  };
+  const { login, loading, error } = useAuth();
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-md w-full p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
         <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Blog Publisher</h1>
         <p className="text-gray-500 dark:text-gray-400 mb-6">
-          Enter your GitHub Personal Access Token to continue.
+          Sign in with GitHub to manage your blog posts.
         </p>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="password"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="ghp_xxxxxxxxxxxx"
-            className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          />
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading || !input.trim()}
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Validating...' : 'Continue'}
-          </button>
-        </form>
-        <p className="mt-4 text-xs text-gray-400">
-          Token needs <code>repo</code> scope. Create at github.com -&gt; Settings -&gt; Developer settings -&gt; Personal access tokens.
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        <button
+          onClick={login}
+          disabled={loading}
+          className="w-full py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          {loading ? 'Redirecting...' : 'Login with GitHub'}
+        </button>
+        <p className="mt-4 text-xs text-gray-400 text-center">
+          We only request <code>repo</code> access for publishing.
         </p>
       </div>
     </div>
