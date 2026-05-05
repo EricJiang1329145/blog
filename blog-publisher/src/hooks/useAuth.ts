@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getOAuthUrl, exchangeCodeForToken, validateToken } from '../lib/github';
+import { getOAuthUrl, exchangeCodeForToken } from '../lib/github';
 import { open } from '@tauri-apps/plugin-shell';
 
 export function useAuth() {
