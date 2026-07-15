@@ -1,7 +1,7 @@
 ---
 title: 我的数学学习复盘：从小初高一路走来的几点心得
 slug: math-learning-methods
-date: 2026-02-23
+date: 2026-07-15
 category: 数学学习
 tags:
   - 数学学习

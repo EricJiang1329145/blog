@@ -24,9 +24,9 @@ export async function exchangeCodeForToken(code: string): Promise<string> {
     }),
   });
 
-  const data = await response.json();
+  const data = await response.json() as { error?: string; error_description?: string; access_token?: string };
   if (data.error) throw new Error(data.error_description || data.error);
-  return data.access_token;
+  return data.access_token!;
 }
 
 export async function validateToken(token: string): Promise<boolean> {
