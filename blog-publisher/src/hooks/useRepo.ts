@@ -1,25 +1,23 @@
-import { useState } from 'react';
-import { cloneRepo } from '../lib/git';
-import { appDataDir } from '@tauri-apps/api/path';
+import { useCallback, useState } from 'react';
+import { syncRepo } from '../lib/git';
 
 export function useRepo() {
-  const [repoPath, setRepoPath] = useState<string | null>(
-    localStorage.getItem('repo_path')
-  );
+  const [repoPath, setRepoPath] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const sync = async (token: string) => {
+  const sync = useCallback(async () => {
     setSyncing(true);
+    setError(null);
     try {
-      const baseDir = await appDataDir();
-      const path = `${baseDir}/blog-repo`;
-      await cloneRepo(token, path);
+      const path = await syncRepo();
       setRepoPath(path);
-      localStorage.setItem('repo_path', path);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setSyncing(false);
     }
-  };
+  }, []);
 
-  return { repoPath, sync, syncing };
+  return { repoPath, sync, syncing, error };
 }

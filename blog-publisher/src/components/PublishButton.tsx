@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { commitAndPush } from '../lib/git';
 
 interface Props {
-  repoPath: string;
   filePath: string;
   content: string;
   onSuccess?: () => void;
 }
 
-export function PublishButton({ repoPath, filePath, content, onSuccess }: Props) {
+export function PublishButton({ filePath, content, onSuccess }: Props) {
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +18,7 @@ export function PublishButton({ repoPath, filePath, content, onSuccess }: Props)
       const timestamp = new Date().toISOString();
       const filename = filePath.split('/').pop() || 'unknown';
       const message = `publish: ${filename} ${timestamp}`;
-      await commitAndPush(repoPath, filePath, content, message);
+      await commitAndPush(filePath, content, message);
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

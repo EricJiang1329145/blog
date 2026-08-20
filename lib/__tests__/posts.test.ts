@@ -1,130 +1,105 @@
-import { posts, tags, categories } from '../data/posts';
+import {
+  getAllCategories,
+  getAllPosts,
+  getAllTags,
+  getPostBySlug,
+  getPostsByCategory,
+  getPostsByTag,
+} from '../posts';
+import { renderMarkdown } from '../../scripts/markdown-renderer';
+import { escapeHtml, escapeXml, safeUrl } from '../../scripts/markdown-safety';
 
-// Replicate the functions from lib/posts.ts using the raw data
-const getAllPosts = () => [...posts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-const getPostBySlug = (slug: string) => posts.find(p => p.slug === slug) || null;
-const getAllTags = () => [...tags];
-const getPostsByTag = (tag: string) => posts.filter(p => p.tags.includes(tag));
-const getAllCategories = () => [...categories];
-const getPostsByCategory = (cat: string) => posts.filter(p => p.category === cat);
-
-describe('getAllPosts', () => {
-  it('returns posts sorted by date descending', () => {
-    const result = getAllPosts();
-    expect(result.length).toBeGreaterThan(0);
-    for (let i = 1; i < result.length; i++) {
-      expect(new Date(result[i - 1].date).getTime()).toBeGreaterThanOrEqual(
-        new Date(result[i].date).getTime()
+describe('post data access', () => {
+  it('returns posts sorted by date descending without article bodies', async () => {
+    const posts = await getAllPosts();
+    expect(posts.length).toBeGreaterThan(0);
+    for (let index = 1; index < posts.length; index += 1) {
+      expect(new Date(posts[index - 1].date).getTime()).toBeGreaterThanOrEqual(
+        new Date(posts[index].date).getTime()
       );
     }
-  });
-
-  it('returns posts with all required fields', () => {
-    const result = getAllPosts();
-    for (const post of result) {
+    for (const post of posts) {
       expect(post.slug).toBeTruthy();
       expect(post.title).toBeTruthy();
-      expect(post.date).toBeTruthy();
       expect(post.tags).toBeInstanceOf(Array);
       expect(post.description).toBeTruthy();
       expect(post.readingTime).toBeTruthy();
-      expect(post.content).toBeTruthy();
-    }
-  });
-});
-
-describe('getPostBySlug', () => {
-  it('returns a post for a valid slug', () => {
-    const firstSlug = posts[0].slug;
-    const post = getPostBySlug(firstSlug);
-    expect(post).not.toBeNull();
-    expect(post!.slug).toBe(firstSlug);
-  });
-
-  it('returns null for non-existent slug', () => {
-    const post = getPostBySlug('non-existent-slug-xyz');
-    expect(post).toBeNull();
-  });
-});
-
-describe('getAllTags', () => {
-  it('returns tags in alphabetical order', () => {
-    const result = getAllTags();
-    expect(result.length).toBeGreaterThan(0);
-    for (let i = 1; i < result.length; i++) {
-      expect(result[i - 1].localeCompare(result[i])).toBeLessThanOrEqual(0);
+      expect(post.content).toBeUndefined();
     }
   });
 
-  it('all tags are non-empty strings', () => {
-    for (const tag of getAllTags()) {
-      expect(typeof tag).toBe('string');
-      expect(tag.length).toBeGreaterThan(0);
+  it('loads a body only for the requested post', async () => {
+    const [firstPost] = await getAllPosts();
+    const post = await getPostBySlug(firstPost.slug);
+    expect(post?.slug).toBe(firstPost.slug);
+    expect(post?.content).toBeTruthy();
+  });
+
+  it('returns null for an unknown slug', async () => {
+    await expect(getPostBySlug('non-existent-slug-xyz')).resolves.toBeNull();
+  });
+
+  it('keeps tags and categories sorted and connected to posts', async () => {
+    const tags = await getAllTags();
+    const categories = await getAllCategories();
+    expect(tags.length).toBeGreaterThan(0);
+    expect(categories.length).toBeGreaterThan(0);
+    expect(tags).toEqual([...tags].sort());
+    expect(categories).toEqual([...categories].sort());
+
+    for (const tag of tags) {
+      const posts = await getPostsByTag(tag);
+      expect(posts.length).toBeGreaterThan(0);
+      expect(posts.every(post => post.tags.includes(tag))).toBe(true);
     }
-  });
-});
-
-describe('getPostsByTag', () => {
-  it('returns posts containing the given tag', () => {
-    const allTags = getAllTags();
-    const tag = allTags[0];
-    const result = getPostsByTag(tag);
-    expect(result.length).toBeGreaterThan(0);
-    for (const post of result) {
-      expect(post.tags).toContain(tag);
-    }
-  });
-
-  it('returns empty array for unknown tag', () => {
-    expect(getPostsByTag('不存在的标签xyz')).toEqual([]);
-  });
-});
-
-describe('getAllCategories', () => {
-  it('returns categories', () => {
-    const result = getAllCategories();
-    expect(result.length).toBeGreaterThan(0);
-    for (let i = 1; i < result.length; i++) {
-      expect(result[i - 1].localeCompare(result[i])).toBeLessThanOrEqual(0);
-    }
-  });
-});
-
-describe('getPostsByCategory', () => {
-  it('returns posts matching the category', () => {
-    const allCats = getAllCategories();
-    const cat = allCats[0];
-    const result = getPostsByCategory(cat);
-    expect(result.length).toBeGreaterThan(0);
-    for (const post of result) {
-      expect(post.category).toBe(cat);
+    for (const category of categories) {
+      const posts = await getPostsByCategory(category);
+      expect(posts.length).toBeGreaterThan(0);
+      expect(posts.every(post => post.category === category)).toBe(true);
     }
   });
 
-  it('returns empty array for unknown category', () => {
-    expect(getPostsByCategory('不存在的分类xyz')).toEqual([]);
-  });
-});
-
-describe('data integrity', () => {
-  it('all categories have matching posts', () => {
-    for (const cat of getAllCategories()) {
-      const result = getPostsByCategory(cat);
-      expect(result.length).toBeGreaterThan(0);
-    }
+  it('returns empty lists for unknown filters', async () => {
+    await expect(getPostsByTag('不存在的标签xyz')).resolves.toEqual([]);
+    await expect(getPostsByCategory('不存在的分类xyz')).resolves.toEqual([]);
   });
 
-  it('all tags have matching posts', () => {
-    for (const tag of getAllTags()) {
-      const result = getPostsByTag(tag);
-      expect(result.length).toBeGreaterThan(0);
-    }
-  });
-
-  it('posts have correctly formatted dates', () => {
+  it('contains valid ISO dates', async () => {
+    const posts = await getAllPosts();
     for (const post of posts) {
-      const d = new Date(post.date);
-      expect(d.toString()).not.toBe('Invalid Date');
+      expect(Number.isNaN(Date.parse(post.date))).toBe(false);
+      expect(new Date(post.date).toISOString()).toBe(post.date);
     }
+  });
+});
+
+describe('Markdown rendering safety', () => {
+  it('escapes raw HTML', () => {
+    expect(escapeHtml('<img src=x onerror="alert(1)">')).toBe(
+      '&lt;img src=x onerror=&quot;alert(1)&quot;&gt;'
+    );
+  });
+
+  it('blocks executable URL schemes', () => {
+    expect(safeUrl('javascript:alert(1)', true)).toBe('#');
+    expect(safeUrl('https://example.com')).toBe('https://example.com');
+    expect(safeUrl('mailto:test@example.com', true)).toBe('mailto:test@example.com');
+  });
+
+  it('sanitizes raw HTML and executable links in rendered Markdown', () => {
+    const rendered = renderMarkdown(
+      '<img src=x onerror="alert(1)">\n\n[unsafe](javascript:alert(1))\n\n![unsafe](data:text/html,test)'
+    );
+    expect(rendered).toContain('&lt;img src=x onerror=&quot;alert(1)&quot;&gt;');
+    expect(rendered).toContain('href="#"');
+    expect(rendered).toContain('src="#"');
+    expect(rendered).not.toContain('javascript:');
+    expect(rendered).not.toContain('data:text/html');
+  });
+
+  it('escapes RSS XML text', () => {
+    expect(escapeXml(`A & B < C > D "quote" 'apostrophe'`)).toBe(
+      'A &amp; B &lt; C &gt; D &quot;quote&quot; &apos;apostrophe&apos;'
+    );
   });
 });

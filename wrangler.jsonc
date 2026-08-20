@@ -6,7 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "blog",
 	"main": ".open-next/worker.js",
-	"compatibility_date": "2025-10-08",
+	"compatibility_date": "2026-08-20",
 	"compatibility_flags": [
 		"nodejs_compat",
 		"global_fetch_strictly_public"
@@ -18,12 +18,5 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true,
-	"kv_namespaces": [
-		{
-			"binding": "BLOG_STATS",
-			"id": "7a7924e394ef4f7d91caecb46f32e61c",
-			"remote": true
-		}
-	]
+	"upload_source_maps": true
 }

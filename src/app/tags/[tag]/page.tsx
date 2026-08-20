@@ -2,8 +2,8 @@ import Link from "next/link";
 import { getPostsByTag } from "../../../../lib/posts";
 import ScrollReveal from "../../../components/ScrollReveal";
 
-export default async function TagPage({ params }: { params: { tag: string } }) {
-  const { tag } = params;
+export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
+  const { tag } = await params;
   const posts = await getPostsByTag(tag);
 
   return (

@@ -18,7 +18,7 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src ipc: http://ipc.localhost https://ipc.localhost"
     }
   },
   "bundle": {
@@ -39,15 +39,9 @@
     }
   },
   "plugins": {
-    "shell": {
-      "open": true,
-      "scope": [
-        { "name": "git", "cmd": "git", "args": true }
-      ]
-    },
     "fs": {
       "scope": {
-        "allow": ["$APPDATA/**", "$HOME/.blog-publisher/**"]
+        "allow": ["$APPDATA/**"]
       }
     }
   }

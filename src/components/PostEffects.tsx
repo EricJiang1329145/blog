@@ -13,7 +13,6 @@ export default function PostEffects() {
         const code = decodeURIComponent(copyBtn.getAttribute('data-code') || '');
         navigator.clipboard.writeText(code).then(() => {
           copyBtn.classList.add('copied');
-          const svg = copyBtn.querySelector('svg');
           const label = copyBtn.lastChild;
           if (label) label.textContent = ' 已复制';
           setTimeout(() => {

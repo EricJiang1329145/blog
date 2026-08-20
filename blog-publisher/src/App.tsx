@@ -12,8 +12,9 @@ import { Article } from './hooks/useArticles';
 import { writeTextFile, readFile } from '@tauri-apps/plugin-fs';
 
 function App() {
-  const { token, isAuthenticated, logout } = useAuth();
-  const { repoPath, sync } = useRepo();
+  const auth = useAuth();
+  const { isAuthenticated, logout } = auth;
+  const { repoPath, sync, syncing, error: repoError } = useRepo();
   const { articles } = useArticles(repoPath);
 
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
@@ -21,12 +22,12 @@ function App() {
   const [frontmatter, setFrontmatter] = useState<ArticleFrontmatter | null>(null);
   const [view, setView] = useState<'edit' | 'preview'>('edit');
 
-  // Clone repo on first load if not already
+  // Sync once after each in-memory authentication session starts.
   useEffect(() => {
-    if (isAuthenticated && !repoPath && token) {
-      sync(token);
+    if (isAuthenticated) {
+      void sync();
     }
-  }, [isAuthenticated, repoPath, token, sync]);
+  }, [isAuthenticated, sync]);
 
   const handleSelectArticle = async (article: Article) => {
     try {
@@ -48,7 +49,15 @@ function App() {
   };
 
   if (!isAuthenticated) {
-    return <TokenInput />;
+    return (
+      <TokenInput
+        login={auth.login}
+        loading={auth.loading}
+        error={auth.error}
+        deviceCode={auth.deviceCode}
+        verificationUri={auth.verificationUri}
+      />
+    );
   }
 
   return (
@@ -69,11 +78,14 @@ function App() {
             // TODO: handle new article
           }}
         />
+        {repoError && <p className="p-3 text-xs text-red-600">{repoError}</p>}
       </aside>
 
       {/* Right panel - Editor */}
       <main className="flex-1 flex flex-col overflow-hidden">
-        {selectedArticle && frontmatter ? (
+        {syncing ? (
+          <div className="flex-1 flex items-center justify-center text-gray-400">Syncing repository...</div>
+        ) : selectedArticle && frontmatter ? (
           <>
             <div className="p-4 border-b flex justify-between items-center">
               <div className="flex gap-2">
@@ -98,7 +110,6 @@ function App() {
                   Save
                 </button>
                 <PublishButton
-                  repoPath={repoPath || ''}
                   filePath={selectedArticle.path}
                   content={stringifyFrontmatter(frontmatter, body)}
                   onSuccess={() => alert('Published!')}

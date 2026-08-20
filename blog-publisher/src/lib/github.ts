@@ -1,51 +1,33 @@
-const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID;
-const REDIRECT_URI = 'http://localhost:3000/callback';
+import { invoke } from '@tauri-apps/api/core';
 
-export function getOAuthUrl(): string {
-  const params = new URLSearchParams({
-    client_id: GITHUB_CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
-    scope: 'repo',
-  });
-  return `https://github.com/login/oauth/authorize?${params}`;
+const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID || '';
+
+export interface DeviceAuthorization {
+  deviceCode: string;
+  userCode: string;
+  verificationUri: string;
+  expiresIn: number;
+  interval: number;
 }
 
-export async function exchangeCodeForToken(code: string): Promise<string> {
-  const response = await fetch('https://github.com/login/oauth/access_token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify({
-      client_id: GITHUB_CLIENT_ID,
-      code,
-      redirect_uri: REDIRECT_URI,
-    }),
-  });
-
-  const data = await response.json() as { error?: string; error_description?: string; access_token?: string };
-  if (data.error) throw new Error(data.error_description || data.error);
-  return data.access_token!;
+export interface DevicePollResult {
+  status: 'authorized' | 'authorization_pending' | 'slow_down' | 'expired_token' | 'access_denied' | string;
+  message?: string;
 }
 
-export async function validateToken(token: string): Promise<boolean> {
-  const response = await fetch('https://api.github.com/user', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-    },
+export function startDeviceAuthorization(): Promise<DeviceAuthorization> {
+  return invoke('github_start_device_authorization', {
+    clientId: GITHUB_CLIENT_ID,
   });
-  return response.ok;
 }
 
-export async function getRepoInfo(token: string, owner: string, repo: string) {
-  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-    },
+export function pollDeviceAuthorization(deviceCode: string): Promise<DevicePollResult> {
+  return invoke('github_poll_device_authorization', {
+    clientId: GITHUB_CLIENT_ID,
+    deviceCode,
   });
-  if (!response.ok) throw new Error('Repo not found');
-  return response.json();
+}
+
+export function clearGitHubSession(): Promise<void> {
+  return invoke('github_logout');
 }

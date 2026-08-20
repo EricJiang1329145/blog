@@ -7,7 +7,7 @@ import PageViews from "../../../components/PageViews";
 import PostEffects from "../../../components/PostEffects";
 import ImageLightbox from "../../../components/ImageLightbox";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata | undefined> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata | undefined> {
   const resolvedParams = await params;
   const post = await getPostBySlug(resolvedParams.slug);
   if (!post) return;
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
   const post = await getPostBySlug(slug);

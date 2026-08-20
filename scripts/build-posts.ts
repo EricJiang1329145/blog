@@ -1,142 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { marked } from 'marked';
-import hljs from 'highlight.js';
-import markedKatex from 'marked-katex-extension';
 import readingTime from 'reading-time';
-
-// 配置 marked 库
-const renderer = new marked.Renderer();
-
-// 自定义链接渲染
-renderer.link = ({ href, title, text }) => {
-  const linkClasses = 'link-strong link-glass';
-  const titleAttr = title ? `title="${title}"` : '';
-  return `<a href="${href}" ${titleAttr} class="${linkClasses}">${text}</a>`;
-};
-
-// 自定义图片渲染
-renderer.image = ({ href, title, text }) => {
-  const titleAttr = title ? `title="${title}"` : '';
-  const altAttr = text ? `alt="${text}"` : '';
-  return `<img src="${href}" ${altAttr} ${titleAttr} loading="lazy" class="prose-image" />`;
-};
-
-// 代码高亮配置
-renderer.code = ({ text, lang }) => {
-  const validLanguage = lang && hljs.getLanguage(lang) ? lang : 'plaintext';
-  const highlightedCode = hljs.highlight(text, { language: validLanguage }).value;
-  
-  // 生成带行号的代码
-  const lines = highlightedCode.split('\n');
-  const lineNumbers = lines.map((_, index) => `<span class="line-number">${index + 1}</span>`).join('\n');
-  const codeWithLines = lines.map((line, index) => `<div class="code-line"><span class="line-content">${line}</span></div>`).join('\n');
-  
-  return `
-    <div class="code-block-container">
-      <div class="code-block-header">
-        <span class="code-language">${validLanguage}</span>
-        <button class="copy-button copy-button-strong btn-strong-interactive" data-code="${encodeURIComponent(text)}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
-            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-          </svg>
-          复制
-        </button>
-      </div>
-      <div class="code-content-wrapper">
-        <div class="line-numbers">${lineNumbers}</div>
-        <div class="code-content">${codeWithLines}</div>
-      </div>
-    </div>
-  `;
-};
-
-// 初始化 marked
-marked.use({
-  renderer
-});
-
-// 添加 KaTeX 扩展
-marked.use(markedKatex({
-  throwOnError: false
-}));
-
-// 添加脚注扩展
-marked.use({
-  extensions: [
-    {
-      name: 'footnoteRef',
-      level: 'inline',
-      start(src) {
-        return src.indexOf('[^');
-      },
-      tokenizer(src, tokens) {
-        const match = src.match(/^\[\^(\d+)\]/);
-        if (match) {
-          return {
-            type: 'footnoteRef',
-            raw: match[0],
-            id: `fn${match[1]}`,
-            label: match[1]
-          };
-        }
-        return undefined;
-      },
-      renderer(token) {
-        return `
-          <span class="footnote-ref">
-            <button 
-              class="footnote-button footnote-button-strong btn-strong-interactive" 
-              data-footnote-id="${token.id}"
-              aria-label="脚注 ${token.label}"
-            >
-              [${token.label}]
-            </button>
-            <span class="footnote-tooltip" id="footnote-tooltip-${token.id}"></span>
-          </span>
-        `;
-      }
-    }
-  ]
-});
-
-// 处理脚注定义的后处理函数
-function processFootnotes(content: string): string {
-  // 提取所有脚注定义
-  const footnoteDefinitions = content.match(/\[\^(\d+)\]:\s*(.*)/g);
-  if (!footnoteDefinitions) return content;
-  
-  // 移除脚注定义
-  let processedContent = content;
-  footnoteDefinitions.forEach(def => {
-    processedContent = processedContent.replace(def, '');
-  });
-  
-  // 添加脚注定义到内容末尾
-  footnoteDefinitions.forEach(def => {
-    const match = def.match(/\[\^(\d+)\]:\s*(.*)/);
-    if (match) {
-      const id = `fn${match[1]}`;
-      const label = match[1];
-      const footnoteContent = match[2];
-      processedContent += `
-        <div class="footnote-definition" id="footnote-${id}" style="display: none;">
-          <div class="footnote-label">[${label}]</div>
-          <div class="footnote-content">${footnoteContent}</div>
-        </div>
-      `;
-    }
-  });
-  
-  return processedContent;
-}
+import { renderMarkdown } from './markdown-renderer';
+import { escapeXml } from './markdown-safety';
 
 // 文章元数据接口
 interface PostMetadata {
   title: string;
-  date: string;
+  date: string | Date;
   category?: string;
   tags: string[];
   description: string;
@@ -164,7 +36,8 @@ async function generatePostsData() {
     console.log('Posts directory not found, creating empty data file');
     const emptyData = {
       posts: [],
-      tags: []
+      tags: [],
+      categories: []
     };
     
     // 创建输出目录
@@ -179,63 +52,55 @@ async function generatePostsData() {
       `export const posts = ${JSON.stringify(emptyData.posts, null, 2)};
 
 export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
+
+export const categories = ${JSON.stringify(emptyData.categories, null, 2)};
 `
+    );
+
+    fs.writeFileSync(
+      path.join(outputDirectory, 'post-loaders.ts'),
+      'export const postContentLoaders: Record<string, () => Promise<{ default: string }>> = {};\n'
     );
     
     return;
   }
   
-  const fileNames = fs.readdirSync(postsDirectory);
+  const fileNames = fs.readdirSync(postsDirectory).filter(fileName => fileName.endsWith('.md'));
   const allPosts: Post[] = await Promise.all(
     fileNames.map(async (fileName) => {
       const slug = fileName.replace(/\.md$/, '');
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+        throw new Error(`Invalid post filename ${fileName}; use lowercase kebab-case`);
+      }
       const fullPath = path.join(postsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data, content } = matter(fileContents);
       
       const metadata = data as PostMetadata;
       const readingTimeResult = readingTime(content);
-      
-      // 预处理分割线，添加不同的类名
-      let processedContent = content;
-      // 替换 --- 为 <hr class="hr-thick">
-      processedContent = processedContent.replace(/^-{3,}$/gm, '<hr class="hr-thick">');
-      // 替换 *** 为 <hr class="hr-medium">
-      processedContent = processedContent.replace(/^\*{3,}$/gm, '<hr class="hr-medium">');
-      // 替换 ___ 为 <hr class="hr-thin">
-      processedContent = processedContent.replace(/^_{3,}$/gm, '<hr class="hr-thin">');
 
-      // 处理脚注定义（在渲染前处理）
-      
-      // 提取所有脚注定义
-      const footnoteDefinitions = processedContent.match(/\[\^(\d+)\]:\s*(.*)/g);
-      
-      // 渲染 Markdown
-      let renderedContent = marked.parse(processedContent) as string;
-      
-      // 添加脚注定义到内容末尾
-      if (footnoteDefinitions) {
-        footnoteDefinitions.forEach(def => {
-          const match = def.match(/\[\^(\d+)\]:\s*(.*)/);
-          if (match) {
-            const id = `fn${match[1]}`;
-            const label = match[1];
-            const footnoteContent = match[2];
-            renderedContent += `
-              <div class="footnote-definition" id="footnote-${id}" style="display: none;">
-                <div class="footnote-label">[${label}]</div>
-                <div class="footnote-content">${footnoteContent}</div>
-              </div>
-            `;
-          }
-        });
+      if (
+        typeof metadata.title !== 'string' || !metadata.title.trim()
+        || typeof metadata.description !== 'string' || !metadata.description.trim()
+        || !Array.isArray(metadata.tags) || !metadata.tags.every(tag => typeof tag === 'string' && tag.trim())
+        || !metadata.date
+        || (metadata.category !== undefined && typeof metadata.category !== 'string')
+      ) {
+        throw new Error(`Invalid frontmatter in ${fileName}`);
       }
+
+      const parsedDate = metadata.date instanceof Date ? metadata.date : new Date(metadata.date);
+      if (Number.isNaN(parsedDate.getTime())) {
+        throw new Error(`Invalid date in ${fileName}`);
+      }
+      const date = parsedDate.toISOString();
+      const renderedContent = renderMarkdown(content);
       
       return {
         id: slug,
         slug,
         title: metadata.title,
-        date: metadata.date,
+        date,
         category: metadata.category,
         tags: metadata.tags,
         description: metadata.description,
@@ -264,30 +129,63 @@ export const tags = ${JSON.stringify(emptyData.tags, null, 2)};
     fs.mkdirSync(outputDirectory, { recursive: true });
   }
   
-  // 写入数据文件
+  const postSummaries = sortedPosts.map(post => ({
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    category: post.category,
+    tags: post.tags,
+    description: post.description,
+    readingTime: post.readingTime,
+  }));
+
+  // 元数据与正文分开输出，让列表页面无需加载所有文章 HTML。
   fs.writeFileSync(
     path.join(outputDirectory, 'posts.ts'),
-    `export const posts = ${JSON.stringify(sortedPosts, null, 2)};
+    `export const posts = ${JSON.stringify(postSummaries, null, 2)};
 
 export const tags = ${JSON.stringify(tags, null, 2)};
 
 export const categories = ${JSON.stringify(categories, null, 2)};
 `
   );
+
+  const contentDirectory = path.join(outputDirectory, 'post-content');
+  fs.rmSync(contentDirectory, { recursive: true, force: true });
+  fs.mkdirSync(contentDirectory, { recursive: true });
+
+  sortedPosts.forEach(post => {
+    fs.writeFileSync(
+      path.join(contentDirectory, `${post.slug}.ts`),
+      `const content = ${JSON.stringify(post.content)};\nexport default content;\n`
+    );
+  });
+
+  const loaderEntries = sortedPosts
+    .map(post => `  ${JSON.stringify(post.slug)}: () => import(${JSON.stringify(`./post-content/${post.slug}`)})`)
+    .join(',\n');
+  fs.writeFileSync(
+    path.join(outputDirectory, 'post-loaders.ts'),
+    `export const postContentLoaders: Record<string, () => Promise<{ default: string }>> = {\n${loaderEntries}\n};\n`
+  );
   
   console.log(`Generated posts data for ${sortedPosts.length} posts`);
 
   // 生成 RSS feed
   const siteUrl = 'https://blog.jmr-eric.workers.dev';
-  const rssItems = sortedPosts.map(post => `
+  const rssItems = sortedPosts.map(post => {
+    const postUrl = `${siteUrl}/posts/${encodeURIComponent(post.slug)}`;
+    return `
     <item>
-      <title><![CDATA[${post.title}]]></title>
-      <link>${siteUrl}/posts/${post.slug}</link>
-      <guid>${siteUrl}/posts/${post.slug}</guid>
-      <description><![CDATA[${post.description}]]></description>
+      <title>${escapeXml(post.title)}</title>
+      <link>${postUrl}</link>
+      <guid>${postUrl}</guid>
+      <description>${escapeXml(post.description)}</description>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-      ${post.tags.map(tag => `<category>${tag}</category>`).join('\n      ')}
-    </item>`).join('');
+      ${post.tags.map(tag => `<category>${escapeXml(tag)}</category>`).join('\n      ')}
+    </item>`;
+  }).join('');
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">

@@ -30,6 +30,8 @@ export default async function Home() {
           <div className="card-paper p-6">
             <div className="text-center mb-5">
               <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-2 border-card-border">
+                {/* The remote generator does not expose stable dimensions or a Next Image-compatible host. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20tech%20blogger%20portrait%2C%20neon%20lighting%2C%20tech%20aesthetic%2C%20digital%20art%2C%20high%20quality"
                   alt="作者头像"

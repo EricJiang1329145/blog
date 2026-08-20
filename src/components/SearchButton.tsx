@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface SearchItem {
@@ -21,6 +20,12 @@ export default function SearchButton() {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  const closeSearch = useCallback(() => {
+    setOpen(false);
+    setQuery('');
+    setResults([]);
+  }, []);
+
   useEffect(() => {
     fetch('/search-index.json')
       .then(r => r.json() as Promise<SearchItem[]>)
@@ -34,23 +39,22 @@ export default function SearchButton() {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
-      setQuery('');
-      setResults([]);
     }
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') closeSearch();
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        setOpen(v => !v);
+        if (open) closeSearch();
+        else setOpen(true);
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, []);
+  }, [closeSearch, open]);
 
   const search = useCallback((q: string) => {
     setQuery(q);
@@ -66,7 +70,7 @@ export default function SearchButton() {
   }, [index]);
 
   const handleSelect = (slug: string) => {
-    setOpen(false);
+    closeSearch();
     router.push(`/posts/${slug}`);
   };
 
@@ -86,7 +90,7 @@ export default function SearchButton() {
 
       {open && (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={closeSearch} />
           <div className="relative w-full max-w-lg mx-4 bg-card-bg border border-card-border rounded-xl shadow-2xl overflow-hidden">
             <div className="flex items-center border-b border-card-border px-4">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">

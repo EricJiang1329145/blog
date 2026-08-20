@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navigation from "../components/Navigation";
 import BackToTopButton from "../components/BackToTopButton";
+import "highlight.js/styles/github-dark.css";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

@@ -27,7 +27,7 @@ Neon Cosmos 是一个现代博客平台，专注于探索技术、数学和太�
 
 ### 技术栈
 
-- **框架**：Next.js 13+ 与 App Router
+- **框架**：Next.js 16 与 App Router
 - **部署**：通过 OpenNext 部署在 Cloudflare Workers
 - **Markdown 处理**：gray-matter 和 marked
 - **代码高亮**：highlight.js
@@ -50,15 +50,9 @@ npm create cloudflare@latest -- --template=cloudflare/templates/next-starter-tem
 
 ```bash
 npm install
-# 或
-yarn install
-# 或
-pnpm install
-# 或
-bun install
 ```
 
-然后运行开发服务器（使用你选择的包管理器）：
+然后运行开发服务器：
 
 ```bash
 npm run dev
@@ -66,9 +60,7 @@ npm run dev
 
 在浏览器中打开 [http://localhost:3000](http://localhost:3000) 查看结果。
 
-你可以通过修改 `app/page.tsx` 开始编辑页面。页面会在你编辑文件时自动更新。
-
-此项目使用 [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) 自动优化和加载 Inter，这是一种自定义 Google 字体。
+你可以通过修改 `src/app/page.tsx` 编辑首页，通过在 `content/posts` 中添加 Markdown 文件来发布文章。开发命令会自动重新生成文章索引。
 
 ## 部署到生产环境
 
@@ -76,8 +68,8 @@ npm run dev
 | :---------------------------- | :----------------------------------------- |
 | `npm run build`               | 构建生产站点                               |
 | `npm run preview`             | 在部署前在本地预览构建                     |
-| `npm run build && npm run deploy` | 将生产站点部署到 Cloudflare          |
-| `npm wrangler tail`           | 查看所有 Workers 的实时日志                |
+| `npm run deploy`              | 构建并部署到 Cloudflare Workers            |
+| `npx wrangler tail`           | 查看 Workers 的实时日志                    |
 
 ## 了解更多
 

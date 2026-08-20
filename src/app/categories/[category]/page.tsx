@@ -2,8 +2,8 @@ import Link from "next/link";
 import { getPostsByCategory } from "../../../../lib/posts";
 import ScrollReveal from "../../../components/ScrollReveal";
 
-export default async function CategoryPage({ params }: { params: { category: string } }) {
-  const { category } = params;
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
   const posts = await getPostsByCategory(category);
 
   return (
